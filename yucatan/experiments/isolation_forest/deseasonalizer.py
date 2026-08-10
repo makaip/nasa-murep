@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 class ClimatologyDeseasonalizer(BaseEstimator, TransformerMixin):
-    def __init__(self, value_cols, window=7):
+    def __init__(self, value_cols, window=7):  # weekly rolling average
         self.value_cols = value_cols
         self.window = window
 
