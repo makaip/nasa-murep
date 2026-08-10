@@ -12,25 +12,20 @@ import warnings
 
 plt.style.use('default')
 
-try:
-    with open(r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v3.pkl', 'rb') as f:
-        data = pickle.load(f)
+with open(r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v3.pkl', 'rb') as f:
+    data = pickle.load(f)
 
-    df = data['data']
-    metadata = data['metadata']
-    print("Data loaded successfully.")
-    
-    lon_centers = np.array(metadata['lon_centers'])
-    lat_centers = np.array(metadata['lat_centers'])
-    if lon_centers.ndim == 1 and lat_centers.ndim == 1:
-        lon_grid_2d, lat_grid_2d = np.meshgrid(lon_centers, lat_centers)
-    else:
-        lon_grid_2d, lat_grid_2d = lon_centers, lat_centers
+df = data['data']
+metadata = data['metadata']
+print("Data loaded successfully.")
+
+lon_centers = np.array(metadata['lon_centers'])
+lat_centers = np.array(metadata['lat_centers'])
+if lon_centers.ndim == 1 and lat_centers.ndim == 1:
+    lon_grid_2d, lat_grid_2d = np.meshgrid(lon_centers, lat_centers)
+else:
+    lon_grid_2d, lat_grid_2d = lon_centers, lat_centers
         
-except FileNotFoundError:
-    print("Data file not found. Please check path.")
-
-
 target_year = 2018
 months = range(1, 13)
 month_data = {
@@ -49,7 +44,6 @@ for date_idx, row in df.iterrows():
     chlor = row.get('chlorophyll')
     ssl = row.get('ssl')
 
-    # Basic validity checks
     if sst is None or chlor is None or ssl is None: continue
     if isinstance(sst, float) and np.isnan(sst): continue
     if isinstance(chlor, float) and np.isnan(chlor): continue
@@ -58,22 +52,11 @@ for date_idx, row in df.iterrows():
     sst_arr = np.array(sst, dtype=float)
     chlor_arr = np.array(chlor, dtype=float)
     ssl_arr = np.array(ssl, dtype=float)
-    
-    # Process SSL (blur) as in the reference analysis to fill small gaps
-    ssl_nan_mask = np.isnan(ssl_arr)
-    if not ssl_nan_mask.all():
-        ssl_filled = ssl_arr.copy()
-        ssl_filled[ssl_nan_mask] = np.nanmean(ssl_arr)
-        ssl_blurred = gaussian_filter(ssl_filled, sigma=2.0)
-        ssl_blurred[ssl_nan_mask] = np.nan
-        ssl_arr = ssl_blurred
 
     month_data[m]['sst'].append(sst_arr)
     month_data[m]['chlor'].append(chlor_arr)
     month_data[m]['ssl'].append(ssl_arr)
 
-# Compute aggregated means
-# This will now reflect only the selected year
 monthly_means = {m: {} for m in months}
 vars_to_aggregate = ['sst', 'chlor', 'ssl']
 
@@ -83,14 +66,12 @@ for m in months:
         if len(grids) > 0:
             with warnings.catch_warnings():
                 warnings.simplefilter('ignore', category=RuntimeWarning)
-                # Stack and Mean
                 stack = np.stack(grids, axis=0)
                 mean_grid = np.nanmean(stack, axis=0)
                 monthly_means[m][var] = mean_grid
         else:
             monthly_means[m][var] = None
 
-# Pre-calculate log10(chlor) for visualization
 for m in months:
     if monthly_means[m]['chlor'] is not None:
         monthly_means[m]['log_chlor'] = np.log10(monthly_means[m]['chlor'])
@@ -126,7 +107,6 @@ def plot_monthly_variable_raw(var_key, title_str, unit_label, cmap, vmin=None, v
     for month_num, ax in enumerate(axes.ravel(), start=1):
         ax.set_extent([lon_min, lon_max, lat_min, lat_max], crs=ccrs.PlateCarree())
         
-        # Allow axes to stretch vertically/horizontally rather than enforcing equal-aspect
         try:
             ax.set_aspect('auto')
         except Exception:
@@ -159,9 +139,7 @@ def plot_monthly_variable_raw(var_key, title_str, unit_label, cmap, vmin=None, v
         cbar = fig.colorbar(mesh_for_cbar, cax=cax)
         cbar.set_label(unit_label, fontsize=12)
 
-    # Include the selected year in the suptitle (target_year is defined earlier)
     # fig.suptitle(f'Monthly Mean {title_str} (Jan–Dec) ({target_year})', fontsize=16, y=0.98)
-
     # plt.show()
 
     plt.savefig(f"./yucatan/experiments/visualization/raw/figs/{var_key}")
