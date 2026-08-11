@@ -31,56 +31,77 @@ from pickler_processors import (
 from pickler_utils import create_spatial_grid
 
 
-def _merge_year_data(
+def _set_field(
+    day_data: Dict, date, field: str, value, n_points_field: str = None, n_points=None
+) -> None:
+    """Assign one variable's data for one date, warning if it overwrites an existing entry.
+
+    A warning here means two different source files mapped to the same calendar
+    date for the same variable (e.g. a duplicate/reprocessed granule, or a stray
+    file for one day sitting in another day's directory). That's a real data
+    question worth investigating -- it should never be silently absorbed.
+    """
+    entry = day_data.setdefault(date, {})
+    if field in entry:
+        print(f"  Warning: multiple source files map to {date.date()} for '{field}' -- using the last one")
+    entry[field] = value
+    if n_points_field is not None:
+        entry[n_points_field] = n_points
+
+
+def _merge_records(
     sst_results: List[Dict],
     chlor_results: List[Dict],
     cdom_results: List[Dict],
     ssl_results: List[Dict],
 ) -> List[Dict]:
-    """Merge per-product records into a single list of per-date records for one year."""
-    year_data = {}
+    """Merge per-product records into a single list of per-date records.
+
+    This must be called ONCE on the complete result lists spanning every year,
+    not per year. Merging per year was the source of the duplicate-date bug:
+    each year's pass flushed its own date-keyed dict into `all_data`
+    independently, so a boundary file (e.g. a stray Dec-31 granule sitting in
+    the next year's directory) could produce a second, separate row for a date
+    already emitted by the previous year's pass -- same date, two rows, which
+    is what showed up as nested/duplicate-index data downstream.
+    """
+    day_data: Dict = {}
 
     for record in sst_results:
-        date = record["date"]
-        year_data.setdefault(date, {})
-        year_data[date]["sst"] = record["sst"]
-        year_data[date]["sst_n_points"] = record["n_points"]
+        _set_field(day_data, record["date"], "sst", record["sst"], "sst_n_points", record["n_points"])
 
     for record in chlor_results:
-        date = record["date"]
-        year_data.setdefault(date, {})
-        year_data[date]["chlorophyll"] = record["chlorophyll"]
-        year_data[date]["chlor_n_points"] = record["n_points"]
+        _set_field(
+            day_data, record["date"], "chlorophyll", record["chlorophyll"],
+            "chlor_n_points", record["n_points"],
+        )
 
     for record in cdom_results:
         date = record["date"]
-        year_data.setdefault(date, {})
 
         if "cdom_412" in record:
-            year_data[date]["cdom_412"] = record["cdom_412"]
-            year_data[date]["cdom"] = record["cdom_412"]  # Backward-compatible alias
-            year_data[date]["cdom_412_n_points"] = record.get("cdom_412_n_points", np.nan)
+            _set_field(
+                day_data, date, "cdom_412", record["cdom_412"],
+                "cdom_412_n_points", record.get("cdom_412_n_points", np.nan),
+            )
 
         if "cdom_slope_275_295" in record:
-            year_data[date]["cdom_slope_275_295"] = record["cdom_slope_275_295"]
-            year_data[date]["cdom_slope_275_295_n_points"] = record.get(
-                "cdom_slope_275_295_n_points", np.nan
+            _set_field(
+                day_data, date, "cdom_slope_275_295", record["cdom_slope_275_295"],
+                "cdom_slope_275_295_n_points", record.get("cdom_slope_275_295_n_points", np.nan),
             )
 
         if "cdom_slope_300_600" in record:
-            year_data[date]["cdom_slope_300_600"] = record["cdom_slope_300_600"]
-            year_data[date]["cdom_slope_300_600_n_points"] = record.get(
-                "cdom_slope_300_600_n_points", np.nan
+            _set_field(
+                day_data, date, "cdom_slope_300_600", record["cdom_slope_300_600"],
+                "cdom_slope_300_600_n_points", record.get("cdom_slope_300_600_n_points", np.nan),
             )
 
     for record in ssl_results:
-        date = record["date"]
-        year_data.setdefault(date, {})
-        year_data[date]["ssl"] = record["ssl"]
-        year_data[date]["ssl_n_points"] = record["n_points"]
+        _set_field(day_data, record["date"], "ssl", record["ssl"], "ssl_n_points", record["n_points"])
 
     merged_records = []
-    for date, data in year_data.items():
+    for date, data in day_data.items():
         merged = {"date": date}
         merged.update(data)
         merged_records.append(merged)
@@ -105,7 +126,14 @@ def run_pipeline() -> None:
 
     bathymetry_grid = process_bathymetry_data(lat_edges, lon_edges)
 
-    all_data = []
+    # Collect every year's raw per-product results first. Do NOT merge here --
+    # merging must happen once, globally, after every year has been collected
+    # (see _merge_records docstring for why per-year merging caused duplicate
+    # date rows).
+    all_sst_results: List[Dict] = []
+    all_chlor_results: List[Dict] = []
+    all_cdom_results: List[Dict] = []
+    all_ssl_results: List[Dict] = []
 
     for year in range(START_YEAR, END_YEAR + 1):
         print(f"\n{'#' * 70}")
@@ -117,14 +145,21 @@ def run_pipeline() -> None:
         cdom_results = process_cdom_data(year, lat_edges, lon_edges)
         ssl_results = process_ssl_data(year, lat_edges, lon_edges)
 
-        year_records = _merge_year_data(sst_results, chlor_results, cdom_results, ssl_results)
-        all_data.extend(year_records)
+        all_sst_results.extend(sst_results)
+        all_chlor_results.extend(chlor_results)
+        all_cdom_results.extend(cdom_results)
+        all_ssl_results.extend(ssl_results)
 
-        print(f"\nYear {year} summary: {len(year_records)} unique dates")
+        print(
+            f"\nYear {year} summary: {len(sst_results)} SST, {len(chlor_results)} chlorophyll, "
+            f"{len(cdom_results)} CDOM, {len(ssl_results)} SSL records collected"
+        )
 
     print(f"\n{'=' * 70}")
-    print("Creating unified DataFrame...")
+    print("Merging all years into unified per-date records...")
     print(f"{'=' * 70}")
+
+    all_data = _merge_records(all_sst_results, all_chlor_results, all_cdom_results, all_ssl_results)
 
     if not all_data:
         print("ERROR: No data collected! Check file paths and data availability.")
@@ -135,6 +170,19 @@ def run_pipeline() -> None:
     df = pd.DataFrame(all_data)
     df.set_index("date", inplace=True)
     df.sort_index(inplace=True)
+
+    # Hard uniqueness check. With a single global merge this should never
+    # fire again -- if it does, something upstream is producing genuinely
+    # different date objects for what should be the same calendar day (e.g.
+    # a date-parsing bug in extract_date_from_filepath), and that needs to be
+    # investigated rather than silently written to the pickle.
+    if df.index.has_duplicates:
+        dupes = sorted(set(df.index[df.index.duplicated()]))
+        raise ValueError(
+            f"Duplicate dates remain in the final index after merging: {dupes}. "
+            "This should not happen after a single global merge -- check "
+            "extract_date_from_filepath output for these dates before proceeding."
+        )
 
     print("\nDataFrame created:")
     print(f"  Total records: {len(df)}")

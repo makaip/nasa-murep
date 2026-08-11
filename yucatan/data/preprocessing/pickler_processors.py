@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 from scipy.interpolate import RegularGridInterpolator
+from scipy.ndimage import distance_transform_edt
 from tqdm import tqdm
 
 from pickler_config import (
@@ -19,14 +20,12 @@ from pickler_config import (
     LAT_MIN,
     LON_MAX,
     LON_MIN,
-    MAX_CDOM,
     MAX_CHLOR,
-    MAX_SST_CELSIUS,
     MAX_SSL,
-    MIN_CDOM,
+    MAX_SST_CELSIUS,
     MIN_CHLOR,
-    MIN_SST_CELSIUS,
     MIN_SSL,
+    MIN_SST_CELSIUS,
     MODIS_OC_PATTERN,
     MUR_SST_PATTERN,
     RRS_412_VAR,
@@ -46,7 +45,6 @@ from pickler_utils import (
     gaussian_fill_nans,
 )
 
-# Add parent directory to path (cdom_sst folder containing pipelines)
 script_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(script_dir)
 sys.path.insert(0, parent_dir)
@@ -97,12 +95,10 @@ def process_bathymetry_data(lat_edges: np.ndarray, lon_edges: np.ndarray) -> Opt
             ds.close()
             return None
 
-        lat_flip = lat_native[0] > lat_native[-1]
-        lon_flip = lon_native[0] > lon_native[-1]
-        if lat_flip:
+        if lat_native[0] > lat_native[-1]:
             lat_native = lat_native[::-1]
             bathy_data = bathy_data[::-1, :]
-        if lon_flip:
+        if lon_native[0] > lon_native[-1]:
             lon_native = lon_native[::-1]
             bathy_data = bathy_data[:, ::-1]
 
@@ -321,12 +317,6 @@ def process_cdom_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) -
             cdom_412_values = calculate_cdom(rrs_412, rrs_555)
             slope_275_295_values, slope_300_600_values = calculate_cdom_slopes(rrs_443, rrs_547)
 
-            cdom_412_values = np.where(
-                (cdom_412_values >= MIN_CDOM) & (cdom_412_values <= MAX_CDOM),
-                cdom_412_values,
-                np.nan,
-            )
-
             valid_geo = ~np.isnan(lat_flat) & ~np.isnan(lon_flat)
             cdom_mask = valid_geo & ~np.isnan(cdom_412_values)
             s275_mask = valid_geo & ~np.isnan(slope_275_295_values)
@@ -466,7 +456,8 @@ def process_ssl_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) ->
         for t_idx in tqdm(range(n_times), desc=f"  SSL {year}", unit="time"):
             try:
                 time_val = ds["time"].isel(time=t_idx).values
-                file_date = pd.Timestamp(time_val).to_pydatetime()
+                # Explicitly normalize date to midnight (00:00:00) to strip UTC noon offsets
+                file_date = pd.Timestamp(time_val).normalize().to_pydatetime()
 
                 ssl_data = ds[SSL_VAR].isel(time=t_idx).values
 
@@ -489,8 +480,6 @@ def process_ssl_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) ->
                 valid_mask = ~np.isnan(ssl_data)
 
                 if not np.all(valid_mask):
-                    from scipy.ndimage import distance_transform_edt
-
                     indices = distance_transform_edt(
                         np.isnan(ssl_data),
                         return_distances=False,

@@ -1,5 +1,7 @@
 """Shared helper utilities for the multi-variable satellite pickler."""
 
+import os
+import re
 from datetime import datetime, timedelta
 from typing import Optional, Tuple
 
@@ -33,10 +35,7 @@ def create_spatial_grid() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarra
 
 
 def extract_date_from_filepath(filepath: str) -> Optional[datetime]:
-    """Extract date from satellite filename."""
-    import os
-    import re
-
+    """Extract date from satellite filename at normalized midnight time."""
     basename = os.path.basename(filepath)
     patterns = [
         r"(\d{4})(\d{2})(\d{2})",  # YYYYMMDD

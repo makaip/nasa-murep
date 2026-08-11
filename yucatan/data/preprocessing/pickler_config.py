@@ -23,7 +23,7 @@ BATHYMETRY_VAR = "elevation"
 
 # Output
 OUTPUT_DIR = r"E:\satdata\Custom"
-OUTPUT_FILENAME = "yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v3.pkl"
+OUTPUT_FILENAME = "yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
 
 # Variable names
 SST_VAR = "analysed_sst"
