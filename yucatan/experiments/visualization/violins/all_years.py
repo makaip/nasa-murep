@@ -249,7 +249,6 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
     ax.legend(handles=legend_handles, loc='best')
 
     plt.tight_layout()
-    plt.show(block=False)
     return fig, f"{var_title.replace(':', '_').replace(' ', '_')}_{year_str}.png"
 
 # 1. Extract data for all years
