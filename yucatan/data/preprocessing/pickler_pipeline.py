@@ -126,10 +126,6 @@ def run_pipeline() -> None:
 
     bathymetry_grid = process_bathymetry_data(lat_edges, lon_edges)
 
-    # Collect every year's raw per-product results first. Do NOT merge here --
-    # merging must happen once, globally, after every year has been collected
-    # (see _merge_records docstring for why per-year merging caused duplicate
-    # date rows).
     all_sst_results: List[Dict] = []
     all_chlor_results: List[Dict] = []
     all_cdom_results: List[Dict] = []
@@ -171,11 +167,6 @@ def run_pipeline() -> None:
     df.set_index("date", inplace=True)
     df.sort_index(inplace=True)
 
-    # Hard uniqueness check. With a single global merge this should never
-    # fire again -- if it does, something upstream is producing genuinely
-    # different date objects for what should be the same calendar day (e.g.
-    # a date-parsing bug in extract_date_from_filepath), and that needs to be
-    # investigated rather than silently written to the pickle.
     if df.index.has_duplicates:
         dupes = sorted(set(df.index[df.index.duplicated()]))
         raise ValueError(

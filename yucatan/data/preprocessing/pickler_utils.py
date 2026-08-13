@@ -6,13 +6,10 @@ from datetime import datetime, timedelta
 from typing import Optional, Tuple
 
 import numpy as np
-from scipy.ndimage import gaussian_filter
 from scipy.stats import binned_statistic_2d
 
 from pickler_config import (
-    CDOM_B0,
-    CDOM_B1,
-    CDOM_B2,
+    CDOM_412_COEFFS,
     LAT_BINS,
     LAT_MAX,
     LAT_MIN,
@@ -78,33 +75,31 @@ def bin_data_to_grid(
     return binned_data
 
 
-def gaussian_fill_nans(data: np.ndarray, sigma: float) -> np.ndarray:
-    """Fill NaN gaps in a 2-D array using a NaN-aware Gaussian blur."""
-    filled = np.where(np.isnan(data), 0.0, data)
-    weights = np.where(np.isnan(data), 0.0, 1.0)
+def calculate_cdom(rrs_443: np.ndarray, rrs_547: np.ndarray) -> np.ndarray:
+    """Calculate CDOM(412) using the MLR algorithm (Mannino et al., MODIS bands).
 
-    blurred_data = gaussian_filter(filled, sigma=sigma)
-    blurred_weights = gaussian_filter(weights, sigma=sigma)
-
-    with np.errstate(invalid="ignore", divide="ignore"):
-        result = np.where(blurred_weights > 0, blurred_data / blurred_weights, np.nan)
-    return result
-
-
-def calculate_cdom(rrs_412: np.ndarray, rrs_555: np.ndarray) -> np.ndarray:
-    """Calculate CDOM from Rrs_412 and Rrs_555."""
-    cdom_values = np.full_like(rrs_412, np.nan)
+    Ln[aCDOM(412)] = B0 + B1*Ln[Rrs_443] + B2*Ln[Rrs_547]
+    """
+    cdom_values = np.full_like(rrs_443, np.nan)
 
     with np.errstate(divide="ignore", invalid="ignore"):
-        term_ratio = rrs_412 / rrs_555
-        term_numerator = term_ratio - CDOM_B0
-        term_division = term_numerator / CDOM_B2
-        valid_log_mask = term_division > 0
+        valid_mask = (
+            ~np.isnan(rrs_443)
+            & ~np.isnan(rrs_547)
+            & (rrs_443 > 0)
+            & (rrs_547 > 0)
+        )
 
-        if np.any(valid_log_mask):
-            cdom_values[valid_log_mask] = (
-                np.log(term_division[valid_log_mask]) / (-CDOM_B1)
+        if np.any(valid_mask):
+            ln_rrs_443 = np.log(rrs_443[valid_mask])
+            ln_rrs_547 = np.log(rrs_547[valid_mask])
+
+            ln_cdom_412 = (
+                CDOM_412_COEFFS["B0"]
+                + CDOM_412_COEFFS["B1"] * ln_rrs_443
+                + CDOM_412_COEFFS["B2"] * ln_rrs_547
             )
+            cdom_values[valid_mask] = np.exp(ln_cdom_412)
 
     return cdom_values
 

@@ -28,10 +28,8 @@ from pickler_config import (
     MIN_SST_CELSIUS,
     MODIS_OC_PATTERN,
     MUR_SST_PATTERN,
-    RRS_412_VAR,
     RRS_443_VAR,
     RRS_547_VAR,
-    RRS_555_VAR,
     SSL_NATIVE_RES_DEG,
     SSL_PATTERN,
     SSL_VAR,
@@ -42,7 +40,6 @@ from pickler_utils import (
     calculate_cdom,
     calculate_cdom_slopes,
     extract_date_from_filepath,
-    gaussian_fill_nans,
 )
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -287,10 +284,10 @@ def process_cdom_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) -
     print(f"  Found {len(nc_files)} MODIS OC files")
 
     loader = L2DatasetLoader(
-        variables=[RRS_412_VAR, RRS_555_VAR, RRS_443_VAR, RRS_547_VAR],
+        variables=[RRS_443_VAR, RRS_547_VAR],
         group="geophysical_data",
     )
-    extractor = GPUDataExtractor(variables=[RRS_412_VAR, RRS_555_VAR, RRS_443_VAR, RRS_547_VAR])
+    extractor = GPUDataExtractor(variables=[RRS_443_VAR, RRS_547_VAR])
 
     daily_data = {}
 
@@ -305,16 +302,14 @@ def process_cdom_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) -
                 continue
 
             lon_flat, lat_flat, vars_dict = extractor.extract(datasets)
-            required_vars = [RRS_412_VAR, RRS_555_VAR, RRS_443_VAR, RRS_547_VAR]
+            required_vars = [RRS_443_VAR, RRS_547_VAR]
             if len(lon_flat) == 0 or any(var not in vars_dict for var in required_vars):
                 continue
 
-            rrs_412 = vars_dict[RRS_412_VAR]
-            rrs_555 = vars_dict[RRS_555_VAR]
             rrs_443 = vars_dict[RRS_443_VAR]
             rrs_547 = vars_dict[RRS_547_VAR]
 
-            cdom_412_values = calculate_cdom(rrs_412, rrs_555)
+            cdom_412_values = calculate_cdom(rrs_443, rrs_547)
             slope_275_295_values, slope_300_600_values = calculate_cdom_slopes(rrs_443, rrs_547)
 
             valid_geo = ~np.isnan(lat_flat) & ~np.isnan(lon_flat)
@@ -431,7 +426,6 @@ def process_ssl_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) ->
         lon_centers_tgt = lon_edges[:-1] + np.diff(lon_edges) / 2
         lat_bin_size = np.mean(np.diff(lat_edges))
         lon_bin_size = np.mean(np.diff(lon_edges))
-        native_patch_sigma = 0.5
 
         print(
             f"  SSL → target scale: "
@@ -476,7 +470,6 @@ def process_ssl_data(year: int, lat_edges: np.ndarray, lon_edges: np.ndarray) ->
                 if n_valid == 0:
                     continue
 
-                ssl_data = gaussian_fill_nans(ssl_data, sigma=native_patch_sigma)
                 valid_mask = ~np.isnan(ssl_data)
 
                 if not np.all(valid_mask):

@@ -28,16 +28,13 @@ OUTPUT_FILENAME = "yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
 # Variable names
 SST_VAR = "analysed_sst"
 CHLOR_VAR = "chlor_a"
-RRS_412_VAR = "Rrs_412"
-RRS_555_VAR = "Rrs_555"
 RRS_443_VAR = "Rrs_443"
 RRS_547_VAR = "Rrs_547"
 SSL_VAR = "adt"
 
-# CDOM calculation constants
-CDOM_B0 = 0.2487
-CDOM_B1 = 14.028
-CDOM_B2 = 4.085
+# CDOM 412 calculation constants (MLR algorithm, Mannino et al., MODIS bands)
+# Ln[aCDOM(412)] = B0 + B1*Ln[Rrs_443] + B2*Ln[Rrs_547]
+CDOM_412_COEFFS = {"B0": -3.070, "B1": -1.285, "B2": 1.107}
 
 # CDOM spectral slope constants (Mannino et al.)
 # Ln[S_275:295] = -3.258 + 0.336*Ln[Rrs_443] - 0.279*Ln[Rrs_547]
