@@ -14,7 +14,7 @@ END_YEAR = 2019
 
 # Data directories (patterns with {year} placeholder)
 MUR_SST_PATTERN = r"E:\satdata\sst\MUR-JPL-L4-GLOB-v4.1_Yucatan Peninsula_{year}-01-01_{year}-12-31"
-MODIS_OC_PATTERN = r"G:\satdata\cdom\Yucatan Peninsula_{year}-01-01_{year}-12-31"
+MODIS_OC_PATTERN = r"I:\satdata\cdom\Yucatan Peninsula_{year}-01-01_{year}-12-31"
 SSL_PATTERN = r"E:\satdata\GCOOS_Yucatan Peninsula_2010-01-01_2019-12-31"
 
 # Bathymetry data
@@ -45,7 +45,7 @@ S300_600_COEFFS = {"B0": -3.640, "B1": 0.186, "B2": -0.146}
 # Quality control thresholds
 MIN_SST_CELSIUS = -2.0
 MAX_SST_CELSIUS = 40.0
-MIN_CHLOR = 0.01
+MIN_CHLOR = 0.0
 MAX_CHLOR = 100.0
 MIN_CDOM = 0.0
 MAX_CDOM = 1.0

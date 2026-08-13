@@ -16,6 +16,8 @@ from pickler_config import (
     LON_BINS,
     LON_MAX,
     LON_MIN,
+    MAX_CDOM,
+    MIN_CDOM,
     S275_295_COEFFS,
     S300_600_COEFFS,
 )
@@ -99,7 +101,13 @@ def calculate_cdom(rrs_443: np.ndarray, rrs_547: np.ndarray) -> np.ndarray:
                 + CDOM_412_COEFFS["B1"] * ln_rrs_443
                 + CDOM_412_COEFFS["B2"] * ln_rrs_547
             )
-            cdom_values[valid_mask] = np.exp(ln_cdom_412)
+            cdom_412 = np.exp(ln_cdom_412)
+            cdom_412 = np.where(
+                (cdom_412 >= MIN_CDOM) & (cdom_412 <= MAX_CDOM),
+                cdom_412,
+                np.nan,
+            )
+            cdom_values[valid_mask] = cdom_412
 
     return cdom_values
 

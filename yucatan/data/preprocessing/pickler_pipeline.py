@@ -224,10 +224,3 @@ def run_pipeline() -> None:
 
     print("\n✓ SUCCESS! Pickle file saved.")
     print(f"  File size: {os.path.getsize(output_path) / (1024 ** 2):.2f} MB")
-    print("\nTo load the data:")
-    print("  import pickle")
-    print(f"  with open('{output_path}', 'rb') as f:")
-    print("      data = pickle.load(f)")
-    print("  df = data['data']")
-    print("  metadata = data['metadata']")
-    print("\n" + "=" * 70)
