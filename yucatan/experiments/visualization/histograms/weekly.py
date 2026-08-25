@@ -11,7 +11,7 @@ plt.style.use('default')
 target_year = 2018
 
 try:
-    with open(r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v3.pkl', 'rb') as f:
+    with open(r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl', 'rb') as f:
         data = pickle.load(f)
 
     df = data['data']
@@ -84,10 +84,11 @@ for p in available_products:
 
 def plot_weekly_histograms(available_products, weekly_data, product_info):
     num_products = len(available_products)
-    rows = (num_products + 1) // 2
-    
-    fig, axes = plt.subplots(rows, 2, figsize=(16, 6 * rows))
-    axes = axes.flatten()
+    cols = 2 if num_products > 1 else 1
+    rows = (num_products + cols - 1) // cols
+
+    fig, axes = plt.subplots(rows, cols, figsize=(8 * cols, 6 * rows))
+    axes = np.atleast_1d(axes).flatten()
 
     for i, p in enumerate(available_products):
         ax = axes[i]

@@ -9,7 +9,7 @@ import cartopy.feature as cfeature
 
 plt.style.use('default')
 
-DATA_PATH = Path(r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v3.pkl")
+DATA_PATH = Path(r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl")
 OUT_DIR = Path("./yucatan/experiments/visualization/raw/figs")
 
 TARGET_YEAR = 2018
@@ -20,6 +20,7 @@ RAW_VARS = ['sst', 'chlorophyll', 'ssl', 'cdom_412',
             'cdom_slope_275_295', 'cdom_slope_300_600']
 
 MIN_VALID_DAYS = 0
+MIN_CDOM, MAX_CDOM = 0.0, 1.0
 
 LAT_MIN, LON_MIN = 19.57871, -92.20216
 LAT_MAX, LON_MAX = 22.86906, -85.61256
@@ -33,6 +34,25 @@ PLOT_CONFIGS = [
     ('cdom_slope_275_295', 'slope (275-295 nm)', 'plasma', None, None),
     ('cdom_slope_300_600', 'slope (300-600 nm)', 'plasma', None, None),
 ]
+
+def apply_cdom_qc(df, min_cdom=MIN_CDOM, max_cdom=MAX_CDOM):
+    """Post-hoc QC clip for cdom_412 on an already-pickled DataFrame.
+
+    Values outside [min_cdom, max_cdom] are set to NaN (same convention
+    used for SST/chlorophyll/SSL in the pickler), not clamped to the bound.
+    """
+    if 'cdom_412' not in df.columns:
+        return df
+
+    def _clip(v):
+        if _is_missing_day(v):
+            return v
+        arr = np.asarray(v, dtype=float)
+        return np.where((arr >= min_cdom) & (arr <= max_cdom), arr, np.nan)
+
+    df = df.copy()
+    df['cdom_412'] = df['cdom_412'].apply(_clip)
+    return df
 
 
 def load_data(path):
@@ -154,6 +174,7 @@ def plot_monthly_variable(monthly_means, lon_grid, lat_grid, var_key, unit_label
 
 def main():
     df, lon_grid, lat_grid = load_data(DATA_PATH)
+    df = apply_cdom_qc(df)
 
     print(f"Processing data for {TARGET_YEAR}...")
     monthly_means = build_monthly_means(df, TARGET_YEAR, RAW_VARS, MIN_VALID_DAYS)
