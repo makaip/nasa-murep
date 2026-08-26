@@ -8,15 +8,22 @@ Pipeline (per calendar month of TARGET_YEAR):
   4. Run [sst_anom, ssl_anom] through the trained isolation-forest pipeline
      (preprocess -> iforest) to get a per-pixel anomaly score
      (score = -decision_function, higher = more anomalous).
-  5. Classify each pixel using two percentile thresholds computed from that
-     month's score distribution:
-       score >= upper percentile  -> upwelling      (red)
-       score <  lower percentile  -> non-upwelling   (blue)
-       otherwise                  -> buffer          (white)
+  5. Classify each pixel as a binary upwelling / non-upwelling call using a
+     single percentile threshold on that month's score distribution, PLUS a
+     physical clip:
+       score >= percentile threshold
+         AND sst_anom z-score < -0.5   (cold water)
+         AND ssl_anom z-score < 1      (not elevated sea level)
+                                    -> upwelling
+       otherwise                  -> non-upwelling
+
+     The z-scores are computed per month from that month's own valid-pixel
+     mean/std of sst_anom and ssl_anom (same spatial-stats approach as the
+     percentile threshold).
 
 Outputs:
   figs/anom.png   monthly anomaly-score maps (continuous colormap)
-  figs/class.png  monthly upwelling/non-upwelling/buffer classification maps
+  figs/class.png  monthly upwelling/non-upwelling classification maps
 """
 
 import warnings
@@ -44,10 +51,15 @@ MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
 # Features the anomaly model was trained on (must match bundle["features"] order).
 ANOM_VARS = ['sst', 'ssl']
 
-# Percentile thresholds for classification (computed per month, over that
+# Percentile threshold for classification (computed per month, over that
 # month's valid-pixel anomaly-score distribution).
-PERCENTILE_UPWELLING = 90      # score >= this percentile -> upwelling
-PERCENTILE_NON_UPWELLING = 80  # score <  this percentile -> non-upwelling
+PERCENTILE_UPWELLING = 90      # score >= this percentile -> upwelling (candidate)
+
+# Physical clip applied on top of the score threshold before a pixel can be
+# labeled upwelling. Z-scores are computed per month from that month's own
+# valid-pixel sst_anom / ssl_anom distributions.
+SST_ANOM_Z_MAX = -0.5   # sst_anom z-score must be < this (cold anomaly)
+SSL_ANOM_Z_MAX = 1.0    # ssl_anom z-score must be < this
 
 LAT_MIN, LON_MIN = 19.57871, -92.20216
 LAT_MAX, LON_MAX = 22.86906, -85.61256
@@ -124,14 +136,28 @@ def monthly_mean_anomaly(df, year, var, month):
         return np.nanmean(anom_stack, axis=0)
 
 
+def zscore_grid(grid, valid):
+    """Spatial z-score of `grid` computed from its own valid-pixel mean/std."""
+    z = np.full(grid.shape, np.nan)
+    vals = grid[valid]
+    mean = np.nanmean(vals)
+    std = np.nanstd(vals)
+    if std == 0 or np.isnan(std):
+        return z  # all-nan / degenerate month, leave as nan (fails clip safely)
+    z[valid] = (grid[valid] - mean) / std
+    return z
+
+
 def compute_monthly_scores(df, year, preprocess, iforest, features):
-    """Returns (monthly_scores, monthly_thresholds), both dicts keyed by month.
+    """Returns (monthly_scores, monthly_thresholds, monthly_zscores), all dicts keyed by month.
 
     monthly_scores[m]      -> 2D grid of anomaly scores (nan where invalid), or None
-    monthly_thresholds[m]  -> (threshold_upwelling, threshold_non_upwelling), or None
+    monthly_thresholds[m]  -> threshold_upwelling (scalar), or None
+    monthly_zscores[m]     -> (sst_anom_z_grid, ssl_anom_z_grid), or None
     """
     monthly_scores = {}
     monthly_thresholds = {}
+    monthly_zscores = {}
 
     for m in range(1, 13):
         anom_grids = {v: monthly_mean_anomaly(df, year, v, m) for v in ANOM_VARS}
@@ -139,6 +165,7 @@ def compute_monthly_scores(df, year, preprocess, iforest, features):
         if any(g is None for g in anom_grids.values()):
             monthly_scores[m] = None
             monthly_thresholds[m] = None
+            monthly_zscores[m] = None
             continue
 
         valid = np.ones_like(anom_grids[ANOM_VARS[0]], dtype=bool)
@@ -148,6 +175,7 @@ def compute_monthly_scores(df, year, preprocess, iforest, features):
         if not valid.any():
             monthly_scores[m] = None
             monthly_thresholds[m] = None
+            monthly_zscores[m] = None
             continue
 
         X_raw = pd.DataFrame({f"{v}_anom": anom_grids[v][valid] for v in ANOM_VARS})
@@ -160,23 +188,33 @@ def compute_monthly_scores(df, year, preprocess, iforest, features):
         monthly_scores[m] = score_grid
 
         threshold_u = np.percentile(scores_valid, PERCENTILE_UPWELLING)
-        threshold_n = np.percentile(scores_valid, PERCENTILE_NON_UPWELLING)
-        monthly_thresholds[m] = (threshold_u, threshold_n)
+        monthly_thresholds[m] = threshold_u
+
+        sst_z = zscore_grid(anom_grids['sst'], valid)
+        ssl_z = zscore_grid(anom_grids['ssl'], valid)
+        monthly_zscores[m] = (sst_z, ssl_z)
 
         print(f"{MONTH_NAMES[m - 1]}: score range [{np.nanmin(scores_valid):.3f}, "
-              f"{np.nanmax(scores_valid):.3f}], upwelling>={threshold_u:.3f}, "
-              f"non-upwelling<{threshold_n:.3f}")
+              f"{np.nanmax(scores_valid):.3f}], upwelling>={threshold_u:.3f}")
 
-    return monthly_scores, monthly_thresholds
+    return monthly_scores, monthly_thresholds, monthly_zscores
 
 
-def classify_grid(score_grid, threshold_u, threshold_n):
-    """-1 = non-upwelling, 0 = buffer, 1 = upwelling, nan = invalid pixel."""
+def classify_grid(score_grid, threshold_u, sst_z_grid, ssl_z_grid):
+    """Binary classification: -1 = non-upwelling, 1 = upwelling, nan = invalid pixel.
+
+    Upwelling requires high anomaly score AND a physical clip:
+    sst_anom z-score < SST_ANOM_Z_MAX and ssl_anom z-score < SSL_ANOM_Z_MAX.
+    Every other valid pixel is non-upwelling (no buffer class).
+    """
     class_grid = np.full(score_grid.shape, np.nan)
     valid = ~np.isnan(score_grid)
-    class_grid[valid & (score_grid >= threshold_u)] = 1
-    class_grid[valid & (score_grid < threshold_n)] = -1
-    class_grid[valid & (score_grid >= threshold_n) & (score_grid < threshold_u)] = 0
+
+    clip_ok = (sst_z_grid < SST_ANOM_Z_MAX) & (ssl_z_grid < SSL_ANOM_Z_MAX)
+    upwelling = valid & (score_grid >= threshold_u) & clip_ok
+
+    class_grid[valid] = -1
+    class_grid[upwelling] = 1
     return class_grid
 
 
@@ -231,24 +269,26 @@ def plot_monthly_anomaly_scores(monthly_scores, lon_grid, lat_grid, out_dir,
     plt.close(fig)
 
 
-def plot_monthly_classification(monthly_scores, monthly_thresholds, lon_grid, lat_grid,
-                                 out_dir, filename='class.png'):
-    cmap = mcolors.ListedColormap(['#1f5fa8', '#ffffff', '#c0392b'])  # blue, white, red
-    norm = mcolors.BoundaryNorm([-1.5, -0.5, 0.5, 1.5], cmap.N)
+def plot_monthly_classification(monthly_scores, monthly_thresholds, monthly_zscores,
+                                 lon_grid, lat_grid, out_dir, filename='class.png'):
+    cmap = mcolors.ListedColormap(['#1f5fa8', '#c0392b'])  # blue, red
+    norm = mcolors.BoundaryNorm([-1.5, 0, 1.5], cmap.N)
 
-    print("Plotting classification (upwelling / buffer / non-upwelling)")
+    print("Plotting classification (upwelling / non-upwelling)")
 
     fig, axes = _new_month_axes()
     mesh_for_cbar = None
     for month_num, ax in enumerate(axes.ravel(), start=1):
         score_grid = monthly_scores.get(month_num)
         thresholds = monthly_thresholds.get(month_num)
-        if score_grid is None or thresholds is None:
+        zscores = monthly_zscores.get(month_num)
+        if score_grid is None or thresholds is None or zscores is None:
             ax.set_title(f"{MONTH_NAMES[month_num - 1]}\nNo Data", fontsize=10)
             continue
 
-        threshold_u, threshold_n = thresholds
-        class_grid = classify_grid(score_grid, threshold_u, threshold_n)
+        threshold_u = thresholds
+        sst_z_grid, ssl_z_grid = zscores
+        class_grid = classify_grid(score_grid, threshold_u, sst_z_grid, ssl_z_grid)
 
         mesh = ax.pcolormesh(
             lon_grid, lat_grid, class_grid,
@@ -261,8 +301,8 @@ def plot_monthly_classification(monthly_scores, monthly_thresholds, lon_grid, la
     fig.subplots_adjust(left=0.03, right=0.90, bottom=0.04, top=0.9, wspace=0.06, hspace=0.1)
     if mesh_for_cbar is not None:
         cax = fig.add_axes([0.915, 0.04, 0.012, 0.88])
-        cbar = fig.colorbar(mesh_for_cbar, cax=cax, ticks=[-1, 0, 1])
-        cbar.ax.set_yticklabels(['Non-upwelling', 'Buffer', 'Upwelling'])
+        cbar = fig.colorbar(mesh_for_cbar, cax=cax, ticks=[-1, 1])
+        cbar.ax.set_yticklabels(['Non-upwelling', 'Upwelling'])
 
     out_dir.mkdir(parents=True, exist_ok=True)
     plt.savefig(out_dir / filename)
@@ -274,12 +314,13 @@ def main():
     preprocess, iforest, features = load_model(MODEL_PATH)
 
     print(f"Processing data for {TARGET_YEAR}...")
-    monthly_scores, monthly_thresholds = compute_monthly_scores(
+    monthly_scores, monthly_thresholds, monthly_zscores = compute_monthly_scores(
         df, TARGET_YEAR, preprocess, iforest, features
     )
 
     plot_monthly_anomaly_scores(monthly_scores, lon_grid, lat_grid, OUT_DIR)
-    plot_monthly_classification(monthly_scores, monthly_thresholds, lon_grid, lat_grid, OUT_DIR)
+    plot_monthly_classification(monthly_scores, monthly_thresholds, monthly_zscores,
+                                 lon_grid, lat_grid, OUT_DIR)
 
 
 if __name__ == "__main__":
