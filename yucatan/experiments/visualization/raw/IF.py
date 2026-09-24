@@ -53,7 +53,7 @@ ANOM_VARS = ['sst', 'ssl']
 
 # Percentile threshold for classification (computed per month, over that
 # month's valid-pixel anomaly-score distribution).
-PERCENTILE_UPWELLING = 90      # score >= this percentile -> upwelling (candidate)
+PERCENTILE_UPWELLING = 95      # score >= this percentile -> upwelling (candidate)
 
 # Physical clip applied on top of the score threshold before a pixel can be
 # labeled upwelling. Z-scores are computed per month from that month's own
@@ -211,7 +211,9 @@ def classify_grid(score_grid, threshold_u, sst_z_grid, ssl_z_grid):
     valid = ~np.isnan(score_grid)
 
     clip_ok = (sst_z_grid < SST_ANOM_Z_MAX) & (ssl_z_grid < SSL_ANOM_Z_MAX)
-    upwelling = valid & (score_grid >= threshold_u) & clip_ok
+    upwelling = (valid & (score_grid >= threshold_u) 
+                 & clip_ok
+                 )
 
     class_grid[valid] = -1
     class_grid[upwelling] = 1
