@@ -1,265 +1,311 @@
 import os
 import pickle
+import joblib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
-import warnings
 
-file_path = r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v3.pkl'
+# ----------------------------------------------------------------------------
+# Paths / params (identical to the IF scatterplot script)
+# ----------------------------------------------------------------------------
+DATA_PATH = r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
+MODEL_PATH = r"F:\Programming\GitHub\nasa-murep\yucatan\experiments\isolation_forest\models\iforest_pipeline5.joblib"
+
+# Upwelling zone bounding box (Yucatan shelf)
+UPWELLING_LON_MIN, UPWELLING_LON_MAX = -92.20216, -85.61256
+UPWELLING_LAT_MIN, UPWELLING_LAT_MAX = 19.57871, 22.86906
+
+ANOMALY_PERCENTILE = 95   # top 5% of the day's anomaly scores
+BATHY_THRESHOLD = -20     # pixels shallower than 20 m (or land/NaN) can never be upwelling
+
+# The old violin script used the whole grid; the IF pipeline restricts to the bbox.
+# Set to False to use the full grid instead.
+USE_BBOX = True
+
+
+# ----------------------------------------------------------------------------
+# IF pipeline helpers (copied unchanged from the scatterplot script)
+# ----------------------------------------------------------------------------
+def _same_day_anomaly(arr2d):
+    return arr2d - np.nanmedian(arr2d)
+
+
+def load_model():
+    bundle = joblib.load(MODEL_PATH)
+    iforest_pipeline = bundle["iforest_pipeline"]
+    features = bundle.get("features", ["sst_anom", "ssl_anom"])
+    preprocess = iforest_pipeline.named_steps["preprocess"]
+    iforest = iforest_pipeline.named_steps["iforest"]
+    return preprocess, iforest, features
+
+
+def build_bbox_mask(metadata):
+    lon_centers = np.array(metadata["lon_centers"])
+    lat_centers = np.array(metadata["lat_centers"])
+    lon_grid_2d, lat_grid_2d = np.meshgrid(lon_centers, lat_centers)
+    return (
+        (lon_grid_2d >= UPWELLING_LON_MIN) & (lon_grid_2d <= UPWELLING_LON_MAX)
+        & (lat_grid_2d >= UPWELLING_LAT_MIN) & (lat_grid_2d <= UPWELLING_LAT_MAX)
+    )
+
+
+def build_deep_mask(metadata, grid_shape, threshold=BATHY_THRESHOLD):
+    bathy = np.asarray(metadata["bathymetry"], dtype=float)
+    if bathy.shape != grid_shape:
+        raise ValueError(f"Bathymetry shape {bathy.shape} != data grid shape {grid_shape}")
+    return ~np.isnan(bathy) & (bathy <= threshold)
+
+
+def classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features, deep_mask,
+                           percentile=ANOMALY_PERCENTILE):
+    grid_shape = sst_2d.shape
+    sst_anom = _same_day_anomaly(sst_2d)
+    ssl_anom = _same_day_anomaly(ssl_2d)
+
+    valid = ~np.isnan(sst_anom) & ~np.isnan(ssl_anom)
+    upwelling_mask = np.zeros(grid_shape, dtype=bool)
+    if not np.any(valid):
+        return upwelling_mask
+
+    X_day = pd.DataFrame({"sst_anom": sst_anom[valid], "ssl_anom": ssl_anom[valid]})[features]
+    X_transformed = preprocess.transform(X_day)
+
+    anomaly_score = -iforest.decision_function(X_transformed)
+    if len(anomaly_score) == 0:
+        return upwelling_mask
+
+    raw_anomaly = anomaly_score >= np.percentile(anomaly_score, percentile)
+    sst_anom_z = X_transformed["anom__sst_anom"].to_numpy()
+    ssl_anom_z = X_transformed["anom__ssl_anom"].to_numpy()
+
+    is_upwelling = raw_anomaly & (sst_anom_z < -0.5) & (ssl_anom_z < 1)
+    is_upwelling &= deep_mask[valid]
+
+    rows, cols = np.where(valid)
+    upwelling_mask[rows[is_upwelling], cols[is_upwelling]] = True
+    return upwelling_mask
+
+
+# ----------------------------------------------------------------------------
+# Load data (v4: has ssl + bathymetry)
+# ----------------------------------------------------------------------------
 try:
-    with open(file_path, 'rb') as f:
-        data = pickle.load(f)
-    df = data['data']
+    with open(DATA_PATH, "rb") as f:
+        blob = pickle.load(f)
+    df = blob["data"]
+    metadata = blob["metadata"]
     print("Data loaded successfully.")
-    
-    if not isinstance(df.index, pd.DatetimeIndex):
-        df.index = pd.to_datetime(df.index)
-        
 except FileNotFoundError:
-    print("Data file not found. Please check path.")
+    raise SystemExit("Data file not found. Please check path.")
 
+if not isinstance(df.index, pd.DatetimeIndex):
+    df.index = pd.to_datetime(df.index)
+
+df = df[(df.index.year >= 2010) & (df.index.year <= 2019)]
+
+grid_shape = np.asarray(df["sst"].iloc[0]).shape
+
+
+def _shape_ok(a):
+    return a is not None and np.asarray(a).shape == grid_shape
+
+
+df = df[
+    df["sst"].apply(_shape_ok)
+    & df["ssl"].apply(_shape_ok)
+    & df["chlorophyll"].apply(_shape_ok)
+    & df["cdom_412"].apply(_shape_ok)
+]
+
+preprocess, iforest, features = load_model()
+deep_mask = build_deep_mask(metadata, grid_shape)
+region_flat = (build_bbox_mask(metadata) if USE_BBOX else np.ones(grid_shape, dtype=bool)).flatten()
+
+
+def _is_missing_grid(g):
+    return g is None or (isinstance(g, float) and np.isnan(g))
+
+
+# ----------------------------------------------------------------------------
+# Per-year extraction: IF classification is done PER DAY
+# ----------------------------------------------------------------------------
 def extract_year_data(year, df):
     year_str = str(year)
     print(f"\n{'='*60}\nExtracting Year: {year_str}\n{'='*60}")
-    
-    if int(year) not in df.index.year.unique():
+
+    df_year = df[df.index.year == int(year)]
+    if df_year.empty:
         print(f"No data for year {year_str}")
         return None
-        
-    df_year = df[df.index.year == int(year)].copy()
-    monthly_binary = {}
-    
-    # 1. Compute monthly means and their binary upwelling threshold 
-    for m in range(1, 13):
-        month_rows = df_year[df_year.index.month == m]
-        month_grids = []
-        for _, row in month_rows.iterrows():
-            grid = row.get('sst')
-            if grid is not None and not (isinstance(grid, float) and np.isnan(grid)):
-                month_grids.append(np.array(grid, dtype=float))
-                
-        if month_grids:
-            with warnings.catch_warnings():
-                warnings.simplefilter('ignore', category=RuntimeWarning)
-                mean_month_sst = np.nanmean(np.stack(month_grids), axis=0)
-                
-            spatial_mean = np.nanmean(mean_month_sst)
-            spatial_std = np.nanstd(mean_month_sst)
-            threshold = spatial_mean - spatial_std
-            
-            binary_grid = np.zeros_like(mean_month_sst)
-            binary_grid[mean_month_sst <= threshold] = 1
-            binary_grid[np.isnan(mean_month_sst)] = np.nan
-            monthly_binary[m] = binary_grid
-        else:
-            monthly_binary[m] = None
 
-    # 2. Extract CDOM daily pixels
-    all_month_labels = []
-    all_month_is_upwelling = []
-    all_month_s275 = []
-    all_month_s300 = []
-    all_month_a412 = []
-    
-    all_month_chlor_labels = []
-    all_month_chlor_is_upwelling = []
-    all_month_chlor = []
+    cdom_labels, cdom_up, s275_all, s300_all, a412_all = [], [], [], [], []
+    chl_labels, chl_up, chl_all = [], [], []
 
-    def _is_missing_grid(grid_obj):
-        return grid_obj is None or (isinstance(grid_obj, float) and np.isnan(grid_obj))
+    for date_idx, row in df_year.iterrows():
+        m = date_idx.month
 
-    for m in range(1, 13):
-        bin_grid = monthly_binary.get(m)
-        if bin_grid is None or isinstance(bin_grid, float):
+        sst = row.get('sst')
+        ssl = row.get('ssl')
+        if _is_missing_grid(sst) or _is_missing_grid(ssl):
             continue
-            
-        bin_flat = bin_grid.flatten()
-        month_rows = df_year[df_year.index.month == m]
-        
-        for _, row in month_rows.iterrows():
-            s275 = row.get('cdom_slope_275_295')
-            s300 = row.get('cdom_slope_300_600')
-            a412 = row.get('cdom_412', row.get('cdom'))
-            chlor = row.get('chlorophyll', row.get('chlor_a'))
-            
-            # --- Extract CDOM ---
-            if not any(_is_missing_grid(g) for g in [s275, s300, a412]):
-                s275_flat = np.array(s275, dtype=float).flatten()
-                s300_flat = np.array(s300, dtype=float).flatten()
-                a412_flat = np.array(a412, dtype=float).flatten()
-                
-                valid_cdom = (
-                    ~np.isnan(bin_flat) & 
-                    ~np.isnan(s275_flat) & 
-                    ~np.isnan(s300_flat) & 
-                    ~np.isnan(a412_flat) &
-                    (a412_flat > 0)
-                )
-                
-                if np.any(valid_cdom):
-                    up_flags = bin_flat[valid_cdom] == 1
-                    all_month_labels.extend([m] * int(np.sum(valid_cdom)))
-                    all_month_is_upwelling.extend(up_flags)
-                    all_month_s275.extend(s275_flat[valid_cdom])
-                    all_month_s300.extend(s300_flat[valid_cdom])
-                    all_month_a412.extend(a412_flat[valid_cdom])
 
-            # --- Extract Chlorophyll ---
-            if not _is_missing_grid(chlor):
-                chlor_flat = np.array(chlor, dtype=float).flatten()
-                
-                valid_chlor = (
-                    ~np.isnan(bin_flat) & 
-                    ~np.isnan(chlor_flat) &
-                    (chlor_flat > 0)
-                )
-                
-                if np.any(valid_chlor):
-                    up_flags_chlor = bin_flat[valid_chlor] == 1
-                    all_month_chlor_labels.extend([m] * int(np.sum(valid_chlor)))
-                    all_month_chlor_is_upwelling.extend(up_flags_chlor)
-                    all_month_chlor.extend(np.log10(chlor_flat[valid_chlor]))
+        up_mask = classify_day_upwelling(
+            np.asarray(sst, dtype=float), np.asarray(ssl, dtype=float),
+            preprocess, iforest, features, deep_mask
+        )
+        up_flat = up_mask.flatten()
 
-    all_month_labels = np.array(all_month_labels, dtype=int)
-    all_month_is_upwelling = np.array(all_month_is_upwelling, dtype=bool)
-    all_month_s275 = np.array(all_month_s275)
-    all_month_s300 = np.array(all_month_s300)
-    all_month_a412 = np.array(all_month_a412)
-    
-    all_month_chlor_labels = np.array(all_month_chlor_labels, dtype=int)
-    all_month_chlor_is_upwelling = np.array(all_month_chlor_is_upwelling, dtype=bool)
-    all_month_chlor = np.array(all_month_chlor)
+        s275 = row.get('cdom_slope_275_295')
+        s300 = row.get('cdom_slope_300_600')
+        a412 = row.get('cdom_412', row.get('cdom'))
+        chlor = row.get('chlorophyll', row.get('chlor_a'))
 
-    if all_month_labels.size == 0 and all_month_chlor.size == 0:
+        # --- CDOM ---
+        if not any(_is_missing_grid(g) for g in [s275, s300, a412]):
+            s275_flat = np.array(s275, dtype=float).flatten()
+            s300_flat = np.array(s300, dtype=float).flatten()
+            a412_flat = np.array(a412, dtype=float).flatten()
+
+            valid = (
+                region_flat
+                & ~np.isnan(s275_flat) & ~np.isnan(s300_flat)
+                & ~np.isnan(a412_flat) & (a412_flat > 0)
+            )
+            if np.any(valid):
+                cdom_labels.extend([m] * int(valid.sum()))
+                cdom_up.extend(up_flat[valid])
+                s275_all.extend(s275_flat[valid])
+                s300_all.extend(s300_flat[valid])
+                a412_all.extend(a412_flat[valid])
+
+        # --- Chlorophyll ---
+        if not _is_missing_grid(chlor):
+            chlor_flat = np.array(chlor, dtype=float).flatten()
+            valid = region_flat & ~np.isnan(chlor_flat) & (chlor_flat > 0)
+            if np.any(valid):
+                chl_labels.extend([m] * int(valid.sum()))
+                chl_up.extend(up_flat[valid])
+                chl_all.extend(np.log10(chlor_flat[valid]))
+
+    cdom_labels = np.array(cdom_labels, dtype=int)
+    chl_labels = np.array(chl_labels, dtype=int)
+    chl_all = np.array(chl_all)
+
+    if cdom_labels.size == 0 and chl_all.size == 0:
         print(f"No valid CDOM or Chlorophyll data found for {year_str}.")
         return None
 
     return {
         'year': year_str,
-        'labels': all_month_labels,
-        'is_upwelling': all_month_is_upwelling,
-        's275': all_month_s275,
-        's300': all_month_s300,
-        'a412': all_month_a412,
-        'chlor_labels': all_month_chlor_labels,
-        'chlor_is_upwelling': all_month_chlor_is_upwelling,
-        'chlor': all_month_chlor
+        'labels': cdom_labels,
+        'is_upwelling': np.array(cdom_up, dtype=bool),
+        's275': np.array(s275_all),
+        's300': np.array(s300_all),
+        'a412': np.array(a412_all),
+        'chlor_labels': chl_labels,
+        'chlor_is_upwelling': np.array(chl_up, dtype=bool),
+        'chlor': chl_all,
     }
 
+
 def get_trimmed_limits(data_list):
-    """Calculate the absolute min and max of all data after applying 3-sigma trimming."""
+    """Absolute min/max of all data after 3-sigma trimming (per month, per group)."""
     all_trimmed = []
-    
     for month_data in data_list:
+        labels = month_data['labels']
+        is_up = month_data['is_upwelling']
+        values = month_data['values']
         for m in range(1, 13):
-            labels = month_data['labels']
-            is_up = month_data['is_upwelling']
-            values = month_data['values']
-            
             month_mask = labels == m
-            up_vals = values[month_mask & (is_up == True)]
-            non_vals = values[month_mask & (is_up == False)]
-            
+            up_vals = values[month_mask & is_up]
+            non_vals = values[month_mask & ~is_up]
             up_vals = up_vals[~np.isnan(up_vals)]
             non_vals = non_vals[~np.isnan(non_vals)]
-            
+
             if up_vals.size > 1:
                 u_m, u_s = np.mean(up_vals), np.std(up_vals)
                 all_trimmed.extend(up_vals[(up_vals >= u_m - 3*u_s) & (up_vals <= u_m + 3*u_s)])
             if non_vals.size > 1:
                 n_m, n_s = np.mean(non_vals), np.std(non_vals)
                 all_trimmed.extend(non_vals[(non_vals >= n_m - 3*n_s) & (non_vals <= n_m + 3*n_s)])
-                
+
     if not all_trimmed:
         return 0, 1
-        
     return np.min(all_trimmed), np.max(all_trimmed)
+
 
 def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lims):
     if values.size == 0:
         print(f"No data for {var_title} in {year_str}")
         return None
-        
+
     fig, ax = plt.subplots(figsize=(16, 6))
-    
     up_data, non_data = [], []
     up_positions, non_positions = [], []
-    
+
     for month in range(1, 13):
         month_mask = labels == month
-        up_vals = values[month_mask & (is_upwelling == True)]
-        non_vals = values[month_mask & (is_upwelling == False)]
-        
+        up_vals = values[month_mask & is_upwelling]
+        non_vals = values[month_mask & ~is_upwelling]
         up_vals = up_vals[~np.isnan(up_vals)]
         non_vals = non_vals[~np.isnan(non_vals)]
-        
-        # Trim outer 3 standard deviations
-        if up_vals.size > 1:
-            up_mean, up_std = np.mean(up_vals), np.std(up_vals)
-            up_vals = up_vals[(up_vals >= up_mean - 3 * up_std) & (up_vals <= up_mean + 3 * up_std)]
-            
-        if non_vals.size > 1:
-            non_mean, non_std = np.mean(non_vals), np.std(non_vals)
-            non_vals = non_vals[(non_vals >= non_mean - 3 * non_std) & (non_vals <= non_mean + 3 * non_std)]
 
-        center = month
-        
+        if up_vals.size > 1:
+            mu, sd = np.mean(up_vals), np.std(up_vals)
+            up_vals = up_vals[(up_vals >= mu - 3*sd) & (up_vals <= mu + 3*sd)]
+        if non_vals.size > 1:
+            mu, sd = np.mean(non_vals), np.std(non_vals)
+            non_vals = non_vals[(non_vals >= mu - 3*sd) & (non_vals <= mu + 3*sd)]
+
         if up_vals.size > 1:
             up_data.append(up_vals)
-            up_positions.append(center - 0.2)
+            up_positions.append(month - 0.2)
         if non_vals.size > 1:
             non_data.append(non_vals)
-            non_positions.append(center + 0.2)
-            
-    if up_data:
-        vp_up = ax.violinplot(up_data, positions=up_positions, widths=0.35, showmeans=False, showmedians=True, showextrema=True)
-        for pc in vp_up['bodies']:
-            pc.set_facecolor('red'); pc.set_edgecolor('black'); pc.set_alpha(0.60)
-        for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
-            vp_up[partname].set_edgecolor('black'); vp_up[partname].set_linewidth(1.2)
+            non_positions.append(month + 0.2)
 
-    if non_data:
-        vp_non = ax.violinplot(non_data, positions=non_positions, widths=0.35, showmeans=False, showmedians=True, showextrema=True)
-        for pc in vp_non['bodies']:
-            pc.set_facecolor('blue'); pc.set_edgecolor('black'); pc.set_alpha(0.60)
-        for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
-            vp_non[partname].set_edgecolor('black'); vp_non[partname].set_linewidth(1.2)
+    for dataset, positions, color in ((up_data, up_positions, 'red'), (non_data, non_positions, 'blue')):
+        if not dataset:
+            continue
+        vp = ax.violinplot(dataset, positions=positions, widths=0.35,
+                           showmeans=False, showmedians=True, showextrema=True)
+        for pc in vp['bodies']:
+            pc.set_facecolor(color); pc.set_edgecolor('black'); pc.set_alpha(0.60)
+        for part in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
+            vp[part].set_edgecolor('black'); vp[part].set_linewidth(1.2)
 
     ax.set_xticks(range(1, 13))
-    ax.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    ax.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
     ax.set_ylabel(y_unit)
-    
-    # Apply standard limits with a 5% buffer
+
     y_min, y_max = y_lims
     buffer = (y_max - y_min) * 0.05
-    new_bottom = y_min - buffer
-    new_top = y_max + buffer
+    new_bottom, new_top = y_min - buffer, y_max + buffer
     if 'Log10' not in var_title:
-        new_bottom = max(0, new_bottom)  # Typically non-log physical variables stay >= 0
+        new_bottom = max(0, new_bottom)
     ax.set_ylim(bottom=new_bottom, top=new_top)
-    
-    # ax.set_title(f'{var_title}: Upwelling vs Non-Upwelling by Month ({year_str}) - Violin', fontsize=14, fontweight='bold')
     ax.grid(True, alpha=0.25, linestyle='--')
 
-    legend_handles = [
-        Patch(facecolor='red', edgecolor='black', alpha=0.60, label='Upwelling (≤ -1σ)'),
-        Patch(facecolor='blue', edgecolor='black', alpha=0.60, label='Other (> -1σ)'),
-    ]
-    ax.legend(handles=legend_handles, loc='best')
+    ax.legend(handles=[
+        Patch(facecolor='red', edgecolor='black', alpha=0.60, label='Upwelling'),
+        Patch(facecolor='blue', edgecolor='black', alpha=0.60, label='Non-upwelling'),
+    ], loc='best')
 
     plt.tight_layout()
     return fig, f"{var_title.replace(':', '_').replace(' ', '_')}_{year_str}.png"
 
-# 1. Extract data for all years
+
+# ----------------------------------------------------------------------------
+# Main
+# ----------------------------------------------------------------------------
 all_yearly_data = []
-
 for year in range(2010, 2020):
-    year_data = extract_year_data(year, df)
-    if year_data:
-        all_yearly_data.append(year_data)
+    yd = extract_year_data(year, df)
+    if yd:
+        all_yearly_data.append(yd)
 
-# 2. Determine global limits for each feature based on trimmed data
 s275_list = [{'labels': yd['labels'], 'is_upwelling': yd['is_upwelling'], 'values': yd['s275']} for yd in all_yearly_data]
 s300_list = [{'labels': yd['labels'], 'is_upwelling': yd['is_upwelling'], 'values': yd['s300']} for yd in all_yearly_data]
 a412_list = [{'labels': yd['labels'], 'is_upwelling': yd['is_upwelling'], 'values': yd['a412']} for yd in all_yearly_data]
@@ -269,37 +315,31 @@ limits = {
     's275': get_trimmed_limits(s275_list),
     's300': get_trimmed_limits(s300_list),
     'a412': get_trimmed_limits(a412_list),
-    'chlor': get_trimmed_limits(chlor_list)
+    'chlor': get_trimmed_limits(chlor_list),
 }
+print(f"Global limits computed:\nS275: {limits['s275']}\nS300: {limits['s300']}\n"
+      f"a412: {limits['a412']}\nChlor: {limits['chlor']}")
 
-print(f"Global limits computed:\nS275: {limits['s275']}\nS300: {limits['s300']}\na412: {limits['a412']}\nChlor: {limits['chlor']}")
-
-# 3. Plot all figures with standardized limits
 all_figures = []
-
 for yd in all_yearly_data:
-    year_str = yd['year']
-    print(f"Generating plots for {year_str}...")
-    
-    fig1 = plot_violin(year_str, yd['s275'], yd['labels'], yd['is_upwelling'], 'CDOM S275:295', r'$S_{275-295}$ $\text{ (nm}^{-1}\text{)}$', limits['s275'])
-    if fig1: all_figures.append(fig1)
-        
-    fig2 = plot_violin(year_str, yd['s300'], yd['labels'], yd['is_upwelling'], 'CDOM S300:600', r'$S_{300-600}$ $\text{ (nm}^{-1}\text{)}$', limits['s300'])
-    if fig2: all_figures.append(fig2)
-        
-    fig3 = plot_violin(year_str, yd['a412'], yd['labels'], yd['is_upwelling'], 'CDOM a(412)', r'$a_{\text{CDOM}}$ 412 $\text{ (m}^{-1}\text{)}$', limits['a412'])
-    if fig3: all_figures.append(fig3)
-        
-    fig4 = plot_violin(year_str, yd['chlor'], yd['chlor_labels'], yd['chlor_is_upwelling'], 'Log10 Chlorophyll', r'$\log_{10}(\text{mg/m}^3)$', limits['chlor'])
-    if fig4: all_figures.append(fig4)
+    ys = yd['year']
+    print(f"Generating plots for {ys}...")
+    for res in (
+        plot_violin(ys, yd['s275'], yd['labels'], yd['is_upwelling'], 'CDOM S275:295',
+                    r'$S_{275-295}$ $\text{ (nm}^{-1}\text{)}$', limits['s275']),
+        plot_violin(ys, yd['s300'], yd['labels'], yd['is_upwelling'], 'CDOM S300:600',
+                    r'$S_{300-600}$ $\text{ (nm}^{-1}\text{)}$', limits['s300']),
+        plot_violin(ys, yd['a412'], yd['labels'], yd['is_upwelling'], 'CDOM a(412)',
+                    r'$a_{\text{CDOM}}$ 412 $\text{ (m}^{-1}\text{)}$', limits['a412']),
+        plot_violin(ys, yd['chlor'], yd['chlor_labels'], yd['chlor_is_upwelling'], 'Log10 Chlorophyll',
+                    r'$\log_{10}(\text{mg/m}^3)$', limits['chlor']),
+    ):
+        if res:
+            all_figures.append(res)
 
-import os
-
-# Create figures directory if it doesn't exist
 os.makedirs('figs', exist_ok=True)
-
-# Save all generated figures
 for fig, name in all_figures:
     fig.savefig(os.path.join('figs', name), bbox_inches='tight', dpi=300)
-    
+    plt.close(fig)
+
 print(f"Saved {len(all_figures)} figures to figs/ directory.")

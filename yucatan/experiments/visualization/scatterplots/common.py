@@ -1,5 +1,3 @@
-
-
 import numpy as np
 import pandas as pd
 import pickle
@@ -10,7 +8,7 @@ import joblib
 # ----------------------------------------------------------------------------
 DATA_PATH = r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
 MODEL_PATH = r"F:\Programming\GitHub\nasa-murep\yucatan\experiments\isolation_forest\models\iforest_pipeline5.joblib"
-FIGS_ROOT = r"F:\Programming\GitHub\nasa-murep\yucatan\experiments\visualization\scatterplots\figs"
+FIGS_ROOT = r"F:\Programming\GitHub\nasa-murep\yucatan\experiments\visualization\scatterplots\bayth_figs"
 
 # Upwelling zone bounding box (Yucatan shelf)
 UPWELLING_LON_MIN, UPWELLING_LON_MAX = -92.20216, -85.61256
@@ -19,6 +17,11 @@ UPWELLING_LAT_MIN, UPWELLING_LAT_MAX = 19.57871, 22.86906
 # Percentile of the daily anomaly-score distribution used as the isolation-forest
 # "anomalous" cutoff (matches the value used in the window-based experiment script).
 ANOMALY_PERCENTILE = 95
+
+# Bathymetry cutoff (same sign convention as metadata["bathymetry"]: negative = below
+# sea level). Pixels shallower than this (bathy > BATHY_THRESHOLD), plus land / NaN,
+# can never be labeled upwelling. -20 => at least 20 m deep required.
+BATHY_THRESHOLD = -20
 
 
 def _same_day_anomaly(arr2d):
@@ -68,11 +71,27 @@ def build_bbox_mask(metadata):
     return in_bbox, lon_grid_2d, lat_grid_2d
 
 
-def classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features,
+def build_deep_mask(metadata, grid_shape, threshold=BATHY_THRESHOLD):
+    """
+    Static boolean mask from the (fixed) bathymetry grid:
+    True where bathymetry <= threshold (deep enough), False for shallow / land / NaN.
+    Built once and reused for every day.
+    """
+    bathy = np.asarray(metadata["bathymetry"], dtype=float)
+    if bathy.shape != grid_shape:
+        raise ValueError(f"Bathymetry shape {bathy.shape} != data grid shape {grid_shape}")
+    return ~np.isnan(bathy) & (bathy <= threshold)
+
+
+def classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features, deep_mask,
                             percentile=ANOMALY_PERCENTILE):
     """
     Run the isolation-forest pipeline on a single day's SST/SSL fields and return a
     boolean upwelling mask over the full grid (False for NaN / non-flagged pixels).
+
+    A pixel is upwelling only if it is in the top `percentile` of that day's anomaly
+    scores, passes the cold/low-sea-level clip, AND lies in water at least as deep as
+    BATHY_THRESHOLD (deep_mask == True).
     """
     grid_shape = sst_2d.shape
     sst_anom = _same_day_anomaly(sst_2d)
@@ -95,6 +114,7 @@ def classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features,
     ssl_anom_z = X_transformed["anom__ssl_anom"].to_numpy()
 
     is_upwelling = raw_anomaly & (sst_anom_z < -0.5) & (ssl_anom_z < 1)
+    is_upwelling &= deep_mask[valid]   # shallow candidates -> non-upwelling
 
     rows, cols = np.where(valid)
     upwelling_mask[rows[is_upwelling], cols[is_upwelling]] = True
@@ -114,9 +134,10 @@ def build_all_data(use_iforest=True, max_days=None):
     in_bbox, _, _ = build_bbox_mask(metadata)
     bbox_flat = in_bbox.flatten()
 
-    preprocess = iforest = features = None
+    preprocess = iforest = features = deep_mask = None
     if use_iforest:
         preprocess, iforest, features = load_model()
+        deep_mask = build_deep_mask(metadata, grid_shape)
 
     dates = df.index if max_days is None else df.index[:max_days]
     rows = []
@@ -148,7 +169,7 @@ def build_all_data(use_iforest=True, max_days=None):
         if use_iforest:
             sst_2d = np.asarray(sst, dtype=float)
             ssl_2d = np.asarray(ssl, dtype=float)
-            upwelling_mask = classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features)
+            upwelling_mask = classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features, deep_mask)
             record["upwelling"] = upwelling_mask.flatten()[valid]
 
         rows.append(pd.DataFrame(record))
