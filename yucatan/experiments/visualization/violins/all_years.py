@@ -1,43 +1,28 @@
 import os
+import sys
+from pathlib import Path
 import pickle
-import joblib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from bayth_classification import DATA_PATH, PICKLE_PATH, load_preclassified
+
 # ----------------------------------------------------------------------------
 # Paths / params (identical to the IF scatterplot script)
 # ----------------------------------------------------------------------------
 DATA_PATH = r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
-MODEL_PATH = r"F:\Programming\GitHub\nasa-murep\yucatan\experiments\isolation_forest\models\iforest_pipeline5.joblib"
+PRECLASSIFIED = load_preclassified(PICKLE_PATH)
 
 # Upwelling zone bounding box (Yucatan shelf)
 UPWELLING_LON_MIN, UPWELLING_LON_MAX = -92.20216, -85.61256
 UPWELLING_LAT_MIN, UPWELLING_LAT_MAX = 19.57871, 22.86906
 
-ANOMALY_PERCENTILE = 95   # top 5% of the day's anomaly scores
-BATHY_THRESHOLD = -20     # pixels shallower than 20 m (or land/NaN) can never be upwelling
-
 # The old violin script used the whole grid; the IF pipeline restricts to the bbox.
 # Set to False to use the full grid instead.
 USE_BBOX = True
-
-
-# ----------------------------------------------------------------------------
-# IF pipeline helpers (copied unchanged from the scatterplot script)
-# ----------------------------------------------------------------------------
-def _same_day_anomaly(arr2d):
-    return arr2d - np.nanmedian(arr2d)
-
-
-def load_model():
-    bundle = joblib.load(MODEL_PATH)
-    iforest_pipeline = bundle["iforest_pipeline"]
-    features = bundle.get("features", ["sst_anom", "ssl_anom"])
-    preprocess = iforest_pipeline.named_steps["preprocess"]
-    iforest = iforest_pipeline.named_steps["iforest"]
-    return preprocess, iforest, features
 
 
 def build_bbox_mask(metadata):
@@ -48,43 +33,6 @@ def build_bbox_mask(metadata):
         (lon_grid_2d >= UPWELLING_LON_MIN) & (lon_grid_2d <= UPWELLING_LON_MAX)
         & (lat_grid_2d >= UPWELLING_LAT_MIN) & (lat_grid_2d <= UPWELLING_LAT_MAX)
     )
-
-
-def build_deep_mask(metadata, grid_shape, threshold=BATHY_THRESHOLD):
-    bathy = np.asarray(metadata["bathymetry"], dtype=float)
-    if bathy.shape != grid_shape:
-        raise ValueError(f"Bathymetry shape {bathy.shape} != data grid shape {grid_shape}")
-    return ~np.isnan(bathy) & (bathy <= threshold)
-
-
-def classify_day_upwelling(sst_2d, ssl_2d, preprocess, iforest, features, deep_mask,
-                           percentile=ANOMALY_PERCENTILE):
-    grid_shape = sst_2d.shape
-    sst_anom = _same_day_anomaly(sst_2d)
-    ssl_anom = _same_day_anomaly(ssl_2d)
-
-    valid = ~np.isnan(sst_anom) & ~np.isnan(ssl_anom)
-    upwelling_mask = np.zeros(grid_shape, dtype=bool)
-    if not np.any(valid):
-        return upwelling_mask
-
-    X_day = pd.DataFrame({"sst_anom": sst_anom[valid], "ssl_anom": ssl_anom[valid]})[features]
-    X_transformed = preprocess.transform(X_day)
-
-    anomaly_score = -iforest.decision_function(X_transformed)
-    if len(anomaly_score) == 0:
-        return upwelling_mask
-
-    raw_anomaly = anomaly_score >= np.percentile(anomaly_score, percentile)
-    sst_anom_z = X_transformed["anom__sst_anom"].to_numpy()
-    ssl_anom_z = X_transformed["anom__ssl_anom"].to_numpy()
-
-    is_upwelling = raw_anomaly & (sst_anom_z < -0.5) & (ssl_anom_z < 1)
-    is_upwelling &= deep_mask[valid]
-
-    rows, cols = np.where(valid)
-    upwelling_mask[rows[is_upwelling], cols[is_upwelling]] = True
-    return upwelling_mask
 
 
 # ----------------------------------------------------------------------------
@@ -118,8 +66,6 @@ df = df[
     & df["cdom_412"].apply(_shape_ok)
 ]
 
-preprocess, iforest, features = load_model()
-deep_mask = build_deep_mask(metadata, grid_shape)
 region_flat = (build_bbox_mask(metadata) if USE_BBOX else np.ones(grid_shape, dtype=bool)).flatten()
 
 
@@ -145,16 +91,10 @@ def extract_year_data(year, df):
     for date_idx, row in df_year.iterrows():
         m = date_idx.month
 
-        sst = row.get('sst')
-        ssl = row.get('ssl')
-        if _is_missing_grid(sst) or _is_missing_grid(ssl):
+        month_class = PRECLASSIFIED['by_year'].get(int(year), {}).get(m)
+        if month_class is None:
             continue
-
-        up_mask = classify_day_upwelling(
-            np.asarray(sst, dtype=float), np.asarray(ssl, dtype=float),
-            preprocess, iforest, features, deep_mask
-        )
-        up_flat = up_mask.flatten()
+        up_flat = (month_class['classes'] == 1).flatten()
 
         s275 = row.get('cdom_slope_275_295')
         s300 = row.get('cdom_slope_300_600')
@@ -337,9 +277,10 @@ for yd in all_yearly_data:
         if res:
             all_figures.append(res)
 
-os.makedirs('figs', exist_ok=True)
+FIGS_DIR = Path(__file__).resolve().parents[3] / 'figs' / 'violins'
+FIGS_DIR.mkdir(parents=True, exist_ok=True)
 for fig, name in all_figures:
-    fig.savefig(os.path.join('figs', name), bbox_inches='tight', dpi=300)
+    fig.savefig(FIGS_DIR / name, bbox_inches='tight', dpi=300)
     plt.close(fig)
 
 print(f"Saved {len(all_figures)} figures to figs/ directory.")

@@ -10,7 +10,7 @@ import cartopy.feature as cfeature
 plt.style.use('default')
 
 DATA_PATH = Path(r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl")
-OUT_DIR = Path("./yucatan/experiments/visualization/raw/figs")
+OUT_DIR = Path(__file__).resolve().parents[3] / "figs" / "raw"
 
 TARGET_YEAR = 2018
 MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',

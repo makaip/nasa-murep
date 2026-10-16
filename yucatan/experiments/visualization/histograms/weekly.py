@@ -1,4 +1,5 @@
 import pickle
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ from tqdm.auto import tqdm
 
 plt.style.use('default')
 target_year = 2018
+FIGS_DIR = Path(__file__).resolve().parents[3] / 'figs' / 'histograms'
 
 try:
     with open(r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl', 'rb') as f:
@@ -146,7 +148,8 @@ def plot_weekly_histograms(available_products, weekly_data, product_info):
     plt.tight_layout()
 
     file_name = "_".join(available_products)
-    plt.savefig(f"yucatan/experiments/visualization/histograms/figs/{file_name}")
+    FIGS_DIR.mkdir(parents=True, exist_ok=True)
+    plt.savefig(FIGS_DIR / file_name)
 
 plot_weekly_histograms(available_products, weekly_data, product_info)
 
