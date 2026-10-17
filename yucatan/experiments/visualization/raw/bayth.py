@@ -24,6 +24,7 @@ def plot_year(data, year):
     cmap = mcolors.ListedColormap(["#1f5fa8", "#c0392b"])
     norm = mcolors.BoundaryNorm([-1.5, 0, 1.5], cmap.N)
     mesh = None
+    any_no_upwelling = False
     for month, ax in enumerate(axes.ravel(), 1):
         record = records.get(month)
         ax.set_extent([LON_MIN, LON_MAX, LAT_MIN, LAT_MAX], crs=ccrs.PlateCarree())
@@ -34,8 +35,15 @@ def plot_year(data, year):
             continue
         mesh = ax.pcolormesh(data["lon_grid"], data["lat_grid"], record["classes"], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), shading="auto")
         ax.contour(data["lon_grid"], data["lat_grid"], data["bathymetry"], levels=[data["bayth_threshold"]], colors="limegreen", linewidths=1.2, transform=ccrs.PlateCarree())
-        ax.set_title(MONTH_NAMES[month - 1])
+        if (record["classes"] == 1).any():
+            ax.set_title(MONTH_NAMES[month - 1])
+        else:
+            # Asterisk: month has data but no upwelling zone was classified.
+            ax.set_title(f"{MONTH_NAMES[month - 1]} *")
+            any_no_upwelling = True
     fig.subplots_adjust(left=0.03, right=0.90, bottom=0.04, top=0.90, wspace=0.06, hspace=0.10)
+    if any_no_upwelling:
+        fig.text(0.03, 0.01, "* No upwelling zone classified this month", fontsize=12)
     if mesh is not None:
         cbar = fig.colorbar(mesh, ax=axes.ravel().tolist(), ticks=[-1, 1], fraction=0.02, pad=0.02)
         cbar.ax.set_yticklabels(["Non-upwelling", "Upwelling"])

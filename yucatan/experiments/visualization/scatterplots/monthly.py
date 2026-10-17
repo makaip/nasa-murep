@@ -7,10 +7,16 @@ forest model - we load with use_iforest=False for speed.
 """
 
 import os
+import sys
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 from common import build_all_data, FIGS_ROOT
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from plot_style import apply_nice_xaxis, nice_log_limits
 
 OUTPUT_DIR = os.path.join(FIGS_ROOT, "chlor_vs_cdom_upwelling_months_2010_2019")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -37,8 +43,6 @@ def main():
         if len(nonupwelling_pts) > MAX_POINTS:
             nonupwelling_pts = nonupwelling_pts.sample(n=MAX_POINTS, random_state=42)
 
-        y_min = min(upwelling_pts["chlor"].min(), nonupwelling_pts["chlor"].min())
-
         fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharex=True, sharey=True)
 
         sns.scatterplot(
@@ -49,8 +53,6 @@ def main():
         axes[0].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
         axes[0].set_ylabel("Chlorophyll-a")
         axes[0].set_yscale("log")
-        axes[0].set_xlim(left=0)
-        axes[0].set_ylim(bottom=y_min)
 
         sns.scatterplot(
             ax=axes[1], data=nonupwelling_pts, x="cdom412", y="chlor",
@@ -59,8 +61,14 @@ def main():
         axes[1].set_title("Non-upwelling Months (Oct-Apr)")
         axes[1].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
         axes[1].set_yscale("log")
-        axes[1].set_xlim(left=0)
-        axes[1].set_ylim(bottom=y_min)
+
+        # Shared axes: round limits outward to clean values. Negative aCDOM values are kept.
+        apply_nice_xaxis(axes[0], min(upwelling_pts["cdom412"].min(), nonupwelling_pts["cdom412"].min()),
+                         max(upwelling_pts["cdom412"].max(), nonupwelling_pts["cdom412"].max()))
+        y_limits = nice_log_limits(min(upwelling_pts["chlor"].min(), nonupwelling_pts["chlor"].min()),
+                                   max(upwelling_pts["chlor"].max(), nonupwelling_pts["chlor"].max()))
+        if y_limits is not None:
+            axes[0].set_ylim(*y_limits)
 
         plt.tight_layout()
         plt.savefig(os.path.join(OUTPUT_DIR, f"chlor_vs_cdom_{year}.png"), dpi=300, bbox_inches="tight")

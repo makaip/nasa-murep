@@ -5,10 +5,12 @@ import pickle
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bayth_classification import DATA_PATH, PICKLE_PATH, load_preclassified
+from plot_style import apply_nice_yaxis
 
 # ----------------------------------------------------------------------------
 # Paths / params (identical to the IF scatterplot script)
@@ -107,10 +109,11 @@ def extract_year_data(year, df):
             s300_flat = np.array(s300, dtype=float).flatten()
             a412_flat = np.array(a412, dtype=float).flatten()
 
+            # Negative a412 values are kept: they are valid retrievals, not fill values.
             valid = (
                 region_flat
                 & ~np.isnan(s275_flat) & ~np.isnan(s300_flat)
-                & ~np.isnan(a412_flat) & (a412_flat > 0)
+                & ~np.isnan(a412_flat)
             )
             if np.any(valid):
                 cdom_labels.extend([m] * int(valid.sum()))
@@ -183,9 +186,13 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
     fig, ax = plt.subplots(figsize=(16, 6))
     up_data, non_data = [], []
     up_positions, non_positions = [], []
+    no_upwelling_positions, no_data_months = [], []
 
     for month in range(1, 13):
         month_mask = labels == month
+        if not month_mask.any():
+            no_data_months.append(month)
+            continue
         up_vals = values[month_mask & is_upwelling]
         non_vals = values[month_mask & ~is_upwelling]
         up_vals = up_vals[~np.isnan(up_vals)]
@@ -201,6 +208,8 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
         if up_vals.size > 1:
             up_data.append(up_vals)
             up_positions.append(month - 0.2)
+        else:
+            no_upwelling_positions.append(month - 0.2)
         if non_vals.size > 1:
             non_data.append(non_vals)
             non_positions.append(month + 0.2)
@@ -219,19 +228,27 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
     ax.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
     ax.set_ylabel(y_unit)
+    ax.set_xlim(0.5, 12.5)
+    apply_nice_yaxis(ax, *y_lims)
 
-    y_min, y_max = y_lims
-    buffer = (y_max - y_min) * 0.05
-    new_bottom, new_top = y_min - buffer, y_max + buffer
-    if 'Log10' not in var_title:
-        new_bottom = max(0, new_bottom)
-    ax.set_ylim(bottom=new_bottom, top=new_top)
-    ax.grid(True, alpha=0.25, linestyle='--')
+    # Mark empty slots so missing violins read as intentional, not as plotting errors.
+    # x in data coords, y in axes coords (fraction of the axis height).
+    marker_style = dict(marker='*', linestyle='none', color='red', markeredgecolor='black',
+                        markersize=14)
+    if no_upwelling_positions:
+        ax.plot(no_upwelling_positions, [0.05] * len(no_upwelling_positions),
+                transform=ax.get_xaxis_transform(), clip_on=False, **marker_style)
+    for month in no_data_months:
+        ax.text(month, 0.5, 'No data', transform=ax.get_xaxis_transform(),
+                ha='center', va='center', color='gray', fontsize=10)
 
-    ax.legend(handles=[
+    handles = [
         Patch(facecolor='red', edgecolor='black', alpha=0.60, label='Upwelling'),
         Patch(facecolor='blue', edgecolor='black', alpha=0.60, label='Non-upwelling'),
-    ], loc='best')
+    ]
+    if no_upwelling_positions:
+        handles.append(Line2D([], [], label='No upwelling zone this month', **marker_style))
+    ax.legend(handles=handles, loc='best')
 
     plt.tight_layout()
     return fig, f"{var_title.replace(':', '_').replace(' ', '_')}_{year_str}.png"

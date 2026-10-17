@@ -1,4 +1,5 @@
 import pickle
+import sys
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -7,6 +8,10 @@ import seaborn as sns
 from scipy.ndimage import gaussian_filter
 import warnings
 from tqdm.auto import tqdm
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from plot_style import NICE_STEPS, nice_limits
+from matplotlib.ticker import FixedLocator, MaxNLocator
 
 plt.style.use('default')
 target_year = 2018
@@ -84,6 +89,21 @@ for week_num, week_df in tqdm(df_all_years.groupby('week'), desc="Processing wee
 for p in available_products:
     weekly_data[p] = pd.DataFrame(weekly_data[p])
 
+
+def label_weeks_by_month(ax):
+    """Replace bare ISO week numbers with calendar dates on the x-axis.
+
+    Week bins span x = 0.5 (Jan 1) to 52.5 (end of Dec), so a day of year d sits at
+    x = (d - 1) / 7 + 0.5. Major ticks mark the 1st of each month; minor ticks mark
+    each weekly bin.
+    """
+    month_starts = pd.date_range('2001-01-01', periods=12, freq='MS')  # non-leap reference year
+    ax.xaxis.set_major_locator(FixedLocator((month_starts.dayofyear - 1) / 7 + 0.5))
+    ax.set_xticklabels([d.strftime('%b 1') for d in month_starts])
+    ax.xaxis.set_minor_locator(FixedLocator(np.arange(1, 53)))
+    ax.tick_params(axis='x', which='minor', length=2)
+    ax.set_xlim(0.5, 52.5)
+
 def plot_weekly_histograms(available_products, weekly_data, product_info):
     num_products = len(available_products)
     cols = 2 if num_products > 1 else 1
@@ -109,12 +129,17 @@ def plot_weekly_histograms(available_products, weekly_data, product_info):
         elif p == 'cdom_slope_300_600':
             range_y = [0.015, 0.035]
         elif p == 'cdom_412':
+            # Keep negative a412 retrievals: extend below 0 when the data does.
+            cdom_lower = min(0.0, np.nanpercentile(df_p['value'], 1))
             cdom_upper = np.nanpercentile(df_p['value'], 98)
             if not np.isfinite(cdom_upper) or cdom_upper <= 0:
                 cdom_upper = 0.1
-            range_y = [0, cdom_upper]
+            range_y = [cdom_lower, cdom_upper]
         else:
             range_y = [df_p['value'].min(), df_p['value'].max()]
+
+        # Round the y range outward to clean values so bin edges and ticks line up.
+        range_y = list(nice_limits(*range_y) or range_y)
 
         h, xedges, yedges = np.histogram2d(
             df_p['week'], df_p['value'],
@@ -138,8 +163,11 @@ def plot_weekly_histograms(available_products, weekly_data, product_info):
         )
 
         # ax.set_title(f"{product_info[p]['title']} (2018)", fontweight='bold')
-        ax.set_xlabel('Week of Year')
+        label_weeks_by_month(ax)
+        ax.set_xlabel('Date (weekly bins)')
         ax.set_ylabel(f"{product_info[p]['unit']}")
+        ax.set_ylim(*range_y)
+        ax.yaxis.set_major_locator(MaxNLocator(nbins=6, steps=NICE_STEPS))
         plt.colorbar(im, ax=ax, label='Relative Density')
 
     for j in range(i + 1, len(axes)):

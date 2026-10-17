@@ -6,10 +6,16 @@ fixed SST-below-monthly-mean-minus-std threshold.
 """
 
 import os
+import sys
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 from common import build_all_data, FIGS_ROOT
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from plot_style import apply_nice_xaxis, nice_log_limits
 
 OUTPUT_DIR = os.path.join(FIGS_ROOT, "chlor_vs_cdom_upwelling_zones_pooled")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -26,8 +32,6 @@ def plot_zones(data_subset, filename_suffix):
     if len(zone_out) > MAX_POINTS_POOLED:
         zone_out = zone_out.sample(n=MAX_POINTS_POOLED, random_state=42)
 
-    y_min = min(zone_in["chlor"].min(), zone_out["chlor"].min())
-
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharex=True, sharey=True)
 
     sns.scatterplot(
@@ -38,8 +42,6 @@ def plot_zones(data_subset, filename_suffix):
     axes[0].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
     axes[0].set_ylabel("Chlorophyll-a")
     axes[0].set_yscale("log")
-    axes[0].set_xlim(left=0)
-    axes[0].set_ylim(bottom=y_min)
 
     sns.scatterplot(
         ax=axes[1], data=zone_out, x="cdom412", y="chlor",
@@ -48,8 +50,14 @@ def plot_zones(data_subset, filename_suffix):
     axes[1].set_title("Outside Upwelling")
     axes[1].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
     axes[1].set_yscale("log")
-    axes[1].set_xlim(left=0)
-    axes[1].set_ylim(bottom=y_min)
+
+    # Shared axes: round limits outward to clean values. Negative aCDOM values are kept.
+    apply_nice_xaxis(axes[0], min(zone_in["cdom412"].min(), zone_out["cdom412"].min()),
+                     max(zone_in["cdom412"].max(), zone_out["cdom412"].max()))
+    y_limits = nice_log_limits(min(zone_in["chlor"].min(), zone_out["chlor"].min()),
+                               max(zone_in["chlor"].max(), zone_out["chlor"].max()))
+    if y_limits is not None:
+        axes[0].set_ylim(*y_limits)
 
     plt.tight_layout()
     plt.savefig(os.path.join(OUTPUT_DIR, f"chlor_vs_cdom_{filename_suffix}.png"), dpi=300, bbox_inches="tight")

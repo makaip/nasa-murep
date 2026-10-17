@@ -1,3 +1,4 @@
+import sys
 import warnings
 from pathlib import Path
 
@@ -6,6 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from plot_style import nice_limits
 
 plt.style.use('default')
 
@@ -20,7 +24,8 @@ RAW_VARS = ['sst', 'chlorophyll', 'ssl', 'cdom_412',
             'cdom_slope_275_295', 'cdom_slope_300_600']
 
 MIN_VALID_DAYS = 0
-MIN_CDOM, MAX_CDOM = 0.0, 1.0
+# No lower clip: negative a412 retrievals are kept as valid data.
+MIN_CDOM, MAX_CDOM = None, 1.0
 
 LAT_MIN, LON_MIN = 19.57871, -92.20216
 LAT_MAX, LON_MAX = 22.86906, -85.61256
@@ -40,6 +45,7 @@ def apply_cdom_qc(df, min_cdom=MIN_CDOM, max_cdom=MAX_CDOM):
 
     Values outside [min_cdom, max_cdom] are set to NaN (same convention
     used for SST/chlorophyll/SSL in the pickler), not clamped to the bound.
+    A bound of None disables that side of the clip.
     """
     if 'cdom_412' not in df.columns:
         return df
@@ -48,7 +54,9 @@ def apply_cdom_qc(df, min_cdom=MIN_CDOM, max_cdom=MAX_CDOM):
         if _is_missing_day(v):
             return v
         arr = np.asarray(v, dtype=float)
-        return np.where((arr >= min_cdom) & (arr <= max_cdom), arr, np.nan)
+        lo = -np.inf if min_cdom is None else min_cdom
+        hi = np.inf if max_cdom is None else max_cdom
+        return np.where((arr >= lo) & (arr <= hi), arr, np.nan)
 
     df = df.copy()
     df['cdom_412'] = df['cdom_412'].apply(_clip)
@@ -134,6 +142,8 @@ def plot_monthly_variable(monthly_means, lon_grid, lat_grid, var_key, unit_label
         all_vals = np.concatenate([g.flatten() for g in grids])
         vmin = vmin if vmin is not None else np.nanpercentile(all_vals, 1)
         vmax = vmax if vmax is not None else np.nanpercentile(all_vals, 99)
+        # Round the colorbar range outward to clean values.
+        vmin, vmax = nice_limits(vmin, vmax) or (vmin, vmax)
 
     print(f"Plotting {var_key}: vmin={vmin:.2f}, vmax={vmax:.2f}")
 
@@ -146,7 +156,6 @@ def plot_monthly_variable(monthly_means, lon_grid, lat_grid, var_key, unit_label
         ax.set_aspect('auto')
         ax.add_feature(cfeature.LAND, facecolor='lightgray', edgecolor='black', linewidth=0.8, zorder=3)
         ax.add_feature(cfeature.COASTLINE, linewidth=1.0, zorder=4)
-        ax.gridlines(draw_labels=False, linewidth=0.45, color='white', alpha=0.55, linestyle='--', zorder=2)
 
         data_grid = monthly_means[month_num].get(var_key)
         if data_grid is None:
