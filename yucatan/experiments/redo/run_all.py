@@ -3,7 +3,7 @@ version the isolation-forest model was saved with):
 
     .venv\\Scripts\\python.exe yucatan\\experiments\\redo\\run_all.py
 
-Outputs: yucatan/outputs/redo/{results.md, results.json, figs/}; intermediate caches
+Outputs: yucatan/outputs/redo/{results.md, results.json, figs/} and the index RESULTS.md at the repo root; intermediate caches
 (daily stacks as .npy, zone maps, per-step json) in yucatan/outputs/redo/cache (git-ignored).
 Total runtime ~1 h on the 32-core workstation (stats ~7 min per method).
 """
@@ -14,7 +14,8 @@ import sys
 
 HERE = Path(__file__).resolve().parent
 STEPS = [["sigma.py"], ["iforest.py"], ["kmeans.py"], ["dbscan.py"],
-         ["stats.py", "sigma", "iforest", "kmeans", "kmeans_month"], ["figures.py"], ["report.py"]]
+         ["stats.py", "sigma", "iforest", "kmeans", "kmeans_month"], ["figures.py"], ["kmeans_compare.py"],
+         ["corr_diff.py"], ["report.py"], ["corr_diff.py", "--md-only"], ["results_index.py"]]
 
 for step in STEPS:
     print(f"\n=== {' '.join(step)}", flush=True)

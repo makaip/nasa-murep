@@ -136,6 +136,10 @@ def main():
         "iou_kmeans_vs_iforest": pair_iou("kmeans", "iforest"),
         "iou_iforest_p5_vs_p4": pair_iou("iforest_p4", "iforest"),
     }
+    for extra in ("kmeans_compare", "corr_diff"):
+        f = c.CACHE_DIR / f"{extra}.json"
+        if f.exists():
+            res[extra] = json.load(open(f))
     json.dump(res, open(c.OUT_DIR / "results.json", "w"), indent=1, default=float)
     write_md(res)
     print("report done")
@@ -309,7 +313,9 @@ def write_md(r):
              f"{100*io['frac_iforest_zone_inside_sigma_zone']:.1f}%.\n")
     L.append(table(["Month", "IoU sigma-IF (mean over years)", "IoU sigma-IF (climatology)", "IoU kmeans_month-IF"], rows) + "\n")
     L.append("May-Sep share and 'how often each approach worked': see section 1 tables.\n")
-    (c.OUT_DIR / "results.md").write_text("\n".join(L), encoding="utf-8")
+    static = (c.YUCATAN_DIR / "experiments" / "redo" / "report_static.md").read_text(encoding="utf-8")
+    static = static.split("-->", 1)[1] if static.startswith("<!--") else static
+    (c.OUT_DIR / "results.md").write_text("\n".join(L) + static, encoding="utf-8")
 
 
 if __name__ == "__main__":

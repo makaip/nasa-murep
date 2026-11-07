@@ -290,6 +290,7 @@ IoU of zone maps, -1 sigma vs IF: mean 0.123, median 0.067 over 120 month-years 
 
 May-Sep share and 'how often each approach worked': see section 1 tables.
 
+
 ## 5. Interpretation notes and issues found
 
 1. **The a_CDOM-Chl correlation is mostly built into the algorithms.** `pickler_utils.calculate_cdom` / `calculate_cdom_slopes`
@@ -401,3 +402,54 @@ nasa-murep = this repo (new). nasa-murep-local = `F:\Programming\GitHub\nasa-mur
   every current violin and map, is pipeline4 while all code says pipeline5 (zone IoU p4 vs p5 about 0.75-0.83; coverage 2.5% vs 2.2%), and
   (ii) `scatterplots/common.py` still uses the old per-day pipeline5 / 95th / -20 m rule, so the scatter plots do not match the violins or maps.
   Fix: pick one model, regenerate the pickle (`python bayth_classification.py`), and move the scatterplots onto the pickle.
+
+## 9. Significance of rho_in - rho_out (a_CDOM(412) vs Chl-a, Spearman)
+
+Script `experiments/redo/corr_diff.py`, output `outputs/redo/cache/corr_diff.json` (copied into results.json). Definitions are in the script docstring. a = naive Fisher z (anti-conservative); b1 = Fisher z with Bretherton-style n_eff = n * prod_d (1 - r_a,d r_c,d)/(1 + r_a,d r_c,d) over east-west, north-south and day-to-day lag-1 rank autocorrelations; b2 = Fisher z with n = month-years; c1/c2 = paired block bootstrap over month-years / month-year x 25x25 tiles (B=2000); d = Wilcoxon signed-rank over month-years with >= 30 px in each zone.
+
+### iforest
+
+n_eff factor: inside 2.07e-05, outside 1.30e-05 (lag-1 rank autocorrelations a412/chl: inside time 0.80/0.90, north_south 0.99/0.99, east_west 0.99/0.99; outside time 0.94/0.95, north_south 0.98/0.99, east_west 0.98/0.99)
+
+| Scope | rho in | rho out | diff | n in / out | a naive p | b1 n_eff in/out, p | b2 n MY in/out, p | c1 MY boot 95% CI, p | c2 tile boot 95% CI, p | d Wilcoxon n, median diff, p |
+|---|---|---|---|---|---|---|---|---|---|---|
+| all | 0.946 | 0.980 | -0.035 | 1,329,841 / 54,548,470 | <1e-300 | 28/711, 1.4e-02 | 94/120, 3.0e-04 | [-0.049, -0.023], 5.0e-04 | [-0.042, -0.029], 5.0e-04 | 94, -0.066, 1.9e-14 |
+| May-Sep | 0.917 | 0.973 | -0.056 | 866,086 / 19,443,484 | <1e-300 | 18/253, 3.7e-02 | 50/50, 7.0e-03 | [-0.073, -0.040], 5.0e-04 | [-0.065, -0.046], 5.0e-04 | 50, -0.073, 3.1e-12 |
+| Jan | 0.995 | 0.981 | +0.015 | 715 / 4,523,156 | 5.1e-72 | n_eff<=3 | 1/10, - | [-0.101, +0.018], 5.4e-01 | [+0.013, +0.017], 1.7e-02 | 1, 0.022, - |
+| Feb | 0.976 | 0.985 | -0.009 | 7,346 / 5,650,492 | 6.2e-97 | n_eff<=3 | 2/10, - | [-0.014, +0.006], 5.3e-01 | [-0.017, +0.005], 2.8e-01 | 2, -0.003, - |
+| Mar | 0.959 | 0.983 | -0.024 | 52,564 / 5,604,710 | <1e-300 | n_eff<=3 | 8/10, 4.6e-01 | [-0.049, -0.008], 9.0e-03 | [-0.057, -0.007], 1.0e-03 | 8, -0.104, 1.6e-02 |
+| Apr | 0.903 | 0.980 | -0.078 | 128,380 / 3,858,953 | <1e-300 | n_eff<=3 | 9/10, 1.5e-01 | [-0.125, -0.025], 5.0e-04 | [-0.122, -0.042], 5.0e-04 | 9, -0.055, 1.2e-02 |
+| May | 0.912 | 0.980 | -0.068 | 203,322 / 4,125,563 | <1e-300 | 4/54, 4.2e-01 | 10/10, 1.7e-01 | [-0.092, -0.052], 5.0e-04 | [-0.089, -0.050], 5.0e-04 | 10, -0.079, 2.0e-03 |
+| Jun | 0.910 | 0.977 | -0.067 | 123,971 / 3,152,321 | <1e-300 | n_eff<=3 | 10/10, 2.1e-01 | [-0.110, -0.033], 5.0e-04 | [-0.094, -0.046], 5.0e-04 | 10, -0.089, 5.9e-03 |
+| Jul | 0.871 | 0.971 | -0.101 | 180,378 / 3,955,261 | <1e-300 | 4/52, 5.2e-01 | 10/10, 1.6e-01 | [-0.120, -0.075], 5.0e-04 | [-0.118, -0.082], 5.0e-04 | 10, -0.093, 2.0e-03 |
+| Aug | 0.903 | 0.967 | -0.065 | 222,809 / 4,195,229 | <1e-300 | 5/55, 5.0e-01 | 10/10, 3.1e-01 | [-0.079, -0.048], 5.0e-04 | [-0.076, -0.054], 5.0e-04 | 10, -0.057, 2.0e-03 |
+| Sep | 0.978 | 0.969 | +0.009 | 135,606 / 4,015,110 | <1e-300 | n_eff<=3 | 10/10, 7.6e-01 | [-0.008, +0.016], 2.1e-01 | [-0.000, +0.015], 5.5e-02 | 10, -0.021, 8.4e-02 |
+| Oct | 0.987 | 0.972 | +0.014 | 185,506 / 4,998,894 | <1e-300 | 4/65, 7.5e-01 | 9/10, 5.2e-01 | [+0.006, +0.018], 1.9e-02 | [+0.011, +0.018], 5.0e-04 | 9, -0.003, 7.3e-01 |
+| Nov | 0.975 | 0.981 | -0.007 | 78,371 / 5,130,831 | <1e-300 | n_eff<=3 | 9/10, 7.8e-01 | [-0.043, +0.001], 1.4e-01 | [-0.020, -0.000], 4.5e-02 | 9, -0.061, 3.9e-03 |
+| Dec | 0.893 | 0.981 | -0.088 | 10,873 / 5,337,950 | <1e-300 | n_eff<=3 | 6/10, 2.1e-01 | [-0.249, -0.069], 5.0e-04 | [-0.133, -0.044], 5.0e-04 | 6, -0.191, 3.1e-02 |
+
+### sigma
+
+n_eff factor: inside 7.48e-06, outside 2.32e-05 (lag-1 rank autocorrelations a412/chl: inside time 0.89/0.93, north_south 0.99/0.99, east_west 0.99/0.99; outside time 0.93/0.94, north_south 0.98/0.99, east_west 0.97/0.98)
+
+| Scope | rho in | rho out | diff | n in / out | a naive p | b1 n_eff in/out, p | b2 n MY in/out, p | c1 MY boot 95% CI, p | c2 tile boot 95% CI, p | d Wilcoxon n, median diff, p |
+|---|---|---|---|---|---|---|---|---|---|---|
+| all | 0.973 | 0.975 | -0.002 | 8,450,688 / 47,427,623 | <1e-300 | 63/1099, 7.5e-01 | 120/120, 7.4e-01 | [-0.006, +0.001], 2.4e-01 | [-0.004, -0.001], 9.0e-03 | 120, -0.001, 5.6e-02 |
+| May-Sep | 0.968 | 0.959 | +0.009 | 3,787,357 / 16,522,213 | <1e-300 | 28/383, 5.4e-01 | 50/50, 5.4e-01 | [+0.004, +0.014], 5.0e-04 | [+0.006, +0.012], 5.0e-04 | 50, 0.015, 2.0e-03 |
+| Jan | 0.866 | 0.981 | -0.115 | 352,428 / 4,171,443 | <1e-300 | n_eff<=3 | 10/10, 6.7e-02 | [-0.192, -0.064], 5.0e-04 | [-0.151, -0.088], 5.0e-04 | 10, -0.191, 2.0e-03 |
+| Feb | 0.982 | 0.985 | -0.004 | 201,387 / 5,456,451 | <1e-300 | n_eff<=3 | 10/10, 8.4e-01 | [-0.015, -0.002], 1.0e-03 | [-0.007, -0.001], 1.0e-03 | 10, -0.033, 2.0e-03 |
+| Mar | 0.978 | 0.982 | -0.004 | 709,365 / 4,947,909 | <1e-300 | 5/115, 8.8e-01 | 10/10, 8.5e-01 | [-0.013, +0.001], 1.3e-01 | [-0.010, +0.001], 8.7e-02 | 10, -0.016, 1.4e-02 |
+| Apr | 0.984 | 0.977 | +0.006 | 712,395 / 3,274,938 | <1e-300 | 5/76, 8.1e-01 | 10/10, 7.7e-01 | [-0.000, +0.009], 5.4e-02 | [+0.003, +0.009], 1.0e-03 | 10, -0.007, 2.3e-01 |
+| May | 0.970 | 0.972 | -0.003 | 762,019 / 3,566,866 | 8.1e-254 | 6/83, 9.4e-01 | 10/10, 9.4e-01 | [-0.010, +0.004], 4.3e-01 | [-0.008, +0.003], 3.6e-01 | 10, 0.0, 8.5e-01 |
+| Jun | 0.963 | 0.963 | -0.001 | 659,065 / 2,617,227 | 1.7e-08 | 5/61, 9.9e-01 | 10/10, 9.9e-01 | [-0.011, +0.010], 9.5e-01 | [-0.007, +0.006], 9.1e-01 | 10, 0.01, 2.3e-01 |
+| Jul | 0.953 | 0.956 | -0.003 | 740,240 / 3,395,399 | 4.9e-167 | 6/79, 9.6e-01 | 10/10, 9.5e-01 | [-0.013, +0.006], 5.3e-01 | [-0.011, +0.004], 3.7e-01 | 10, -0.011, 7.7e-01 |
+| Aug | 0.963 | 0.950 | +0.013 | 816,952 / 3,601,086 | <1e-300 | 6/83, 7.9e-01 | 10/10, 7.8e-01 | [+0.004, +0.022], 9.0e-03 | [+0.007, +0.019], 5.0e-04 | 10, 0.019, 8.4e-02 |
+| Sep | 0.984 | 0.950 | +0.034 | 809,081 / 3,341,635 | <1e-300 | 6/77, 3.4e-01 | 10/10, 3.0e-01 | [+0.026, +0.041], 5.0e-04 | [+0.029, +0.039], 5.0e-04 | 10, 0.031, 2.0e-03 |
+| Oct | 0.989 | 0.959 | +0.030 | 1,008,504 / 4,175,896 | <1e-300 | 8/97, 1.8e-01 | 10/10, 2.3e-01 | [+0.026, +0.034], 5.0e-04 | [+0.026, +0.034], 5.0e-04 | 10, 0.027, 2.0e-03 |
+| Nov | 0.977 | 0.974 | +0.003 | 979,827 / 4,229,375 | <1e-300 | 7/98, 8.9e-01 | 10/10, 9.0e-01 | [-0.004, +0.008], 3.3e-01 | [-0.001, +0.008], 1.4e-01 | 10, 0.005, 3.8e-01 |
+| Dec | 0.918 | 0.979 | -0.061 | 699,425 / 4,649,398 | <1e-300 | 5/108, 3.1e-01 | 10/10, 2.0e-01 | [-0.105, -0.031], 5.0e-04 | [-0.078, -0.047], 5.0e-04 | 10, -0.119, 3.9e-03 |
+
+Notes: scopes where a zone has fewer than 5 month-years (IF Jan: 1, Feb: 2) are not testable; with so few resampling units the bootstrap CI need not even contain the point estimate. The Bretherton n_eff is extremely conservative here (spatial lag-1 rank autocorrelation ~0.99 gives n_eff of tens out of 10^5-10^7) and is only usable for the pooled scopes.
+
+**Recommendation for the paper:** report c1 (block bootstrap over whole month-years, 95% CI of rho_in - rho_out), supported by d (Wilcoxon over month-years). Both use the month-year, the unit at which zones are defined, as the independent sample, and neither needs a parametric autocorrelation model. Do not report naive p-values. Result: IF, rho is lower inside than outside, all months -0.035 [95% CI -0.049, -0.023], May-Sep -0.056 [-0.073, -0.040], p < 0.001 (Wilcoxon p = 2e-14, 3e-12; still p = 0.014 / 0.037 under the very conservative n_eff). -1 sigma, no difference pooled (-0.002 [-0.006, +0.001]); May-Sep +0.009 [+0.004, +0.014], negligible. The IF difference is statistically robust but small (rho 0.92 vs 0.97). It is consistent with the IF zone sitting in the high-a_CDOM range, where the algorithmic a_CDOM-Chl relationship bends (section 5), so it should not be read as a distinct biogeochemical regime.
+
