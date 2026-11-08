@@ -1307,483 +1307,7 @@
   },
   "preclassified_pickle_check": {
    "loaded": true,
-   "months_mismatched": [
-    {
-     "year": 2010,
-     "month": 5,
-     "pixels_differ": 182
-    },
-    {
-     "year": 2010,
-     "month": 6,
-     "pixels_differ": 20
-    },
-    {
-     "year": 2010,
-     "month": 7,
-     "pixels_differ": 432
-    },
-    {
-     "year": 2010,
-     "month": 8,
-     "pixels_differ": 236
-    },
-    {
-     "year": 2010,
-     "month": 9,
-     "pixels_differ": 310
-    },
-    {
-     "year": 2010,
-     "month": 10,
-     "pixels_differ": 145
-    },
-    {
-     "year": 2010,
-     "month": 12,
-     "pixels_differ": 60
-    },
-    {
-     "year": 2011,
-     "month": 3,
-     "pixels_differ": 81
-    },
-    {
-     "year": 2011,
-     "month": 4,
-     "pixels_differ": 357
-    },
-    {
-     "year": 2011,
-     "month": 5,
-     "pixels_differ": 251
-    },
-    {
-     "year": 2011,
-     "month": 6,
-     "pixels_differ": 412
-    },
-    {
-     "year": 2011,
-     "month": 7,
-     "pixels_differ": 521
-    },
-    {
-     "year": 2011,
-     "month": 8,
-     "pixels_differ": 237
-    },
-    {
-     "year": 2011,
-     "month": 9,
-     "pixels_differ": 346
-    },
-    {
-     "year": 2011,
-     "month": 10,
-     "pixels_differ": 204
-    },
-    {
-     "year": 2012,
-     "month": 2,
-     "pixels_differ": 67
-    },
-    {
-     "year": 2012,
-     "month": 3,
-     "pixels_differ": 86
-    },
-    {
-     "year": 2012,
-     "month": 4,
-     "pixels_differ": 352
-    },
-    {
-     "year": 2012,
-     "month": 5,
-     "pixels_differ": 577
-    },
-    {
-     "year": 2012,
-     "month": 6,
-     "pixels_differ": 416
-    },
-    {
-     "year": 2012,
-     "month": 7,
-     "pixels_differ": 166
-    },
-    {
-     "year": 2012,
-     "month": 8,
-     "pixels_differ": 264
-    },
-    {
-     "year": 2012,
-     "month": 9,
-     "pixels_differ": 108
-    },
-    {
-     "year": 2012,
-     "month": 10,
-     "pixels_differ": 1
-    },
-    {
-     "year": 2012,
-     "month": 11,
-     "pixels_differ": 77
-    },
-    {
-     "year": 2012,
-     "month": 12,
-     "pixels_differ": 3
-    },
-    {
-     "year": 2013,
-     "month": 2,
-     "pixels_differ": 60
-    },
-    {
-     "year": 2013,
-     "month": 4,
-     "pixels_differ": 19
-    },
-    {
-     "year": 2013,
-     "month": 5,
-     "pixels_differ": 226
-    },
-    {
-     "year": 2013,
-     "month": 6,
-     "pixels_differ": 343
-    },
-    {
-     "year": 2013,
-     "month": 7,
-     "pixels_differ": 338
-    },
-    {
-     "year": 2013,
-     "month": 8,
-     "pixels_differ": 266
-    },
-    {
-     "year": 2013,
-     "month": 9,
-     "pixels_differ": 186
-    },
-    {
-     "year": 2013,
-     "month": 10,
-     "pixels_differ": 295
-    },
-    {
-     "year": 2013,
-     "month": 11,
-     "pixels_differ": 108
-    },
-    {
-     "year": 2014,
-     "month": 3,
-     "pixels_differ": 113
-    },
-    {
-     "year": 2014,
-     "month": 4,
-     "pixels_differ": 69
-    },
-    {
-     "year": 2014,
-     "month": 5,
-     "pixels_differ": 175
-    },
-    {
-     "year": 2014,
-     "month": 6,
-     "pixels_differ": 206
-    },
-    {
-     "year": 2014,
-     "month": 7,
-     "pixels_differ": 242
-    },
-    {
-     "year": 2014,
-     "month": 8,
-     "pixels_differ": 260
-    },
-    {
-     "year": 2014,
-     "month": 9,
-     "pixels_differ": 215
-    },
-    {
-     "year": 2014,
-     "month": 10,
-     "pixels_differ": 400
-    },
-    {
-     "year": 2014,
-     "month": 11,
-     "pixels_differ": 91
-    },
-    {
-     "year": 2015,
-     "month": 3,
-     "pixels_differ": 33
-    },
-    {
-     "year": 2015,
-     "month": 4,
-     "pixels_differ": 139
-    },
-    {
-     "year": 2015,
-     "month": 5,
-     "pixels_differ": 207
-    },
-    {
-     "year": 2015,
-     "month": 6,
-     "pixels_differ": 203
-    },
-    {
-     "year": 2015,
-     "month": 7,
-     "pixels_differ": 68
-    },
-    {
-     "year": 2015,
-     "month": 8,
-     "pixels_differ": 231
-    },
-    {
-     "year": 2015,
-     "month": 9,
-     "pixels_differ": 229
-    },
-    {
-     "year": 2015,
-     "month": 10,
-     "pixels_differ": 217
-    },
-    {
-     "year": 2015,
-     "month": 11,
-     "pixels_differ": 403
-    },
-    {
-     "year": 2016,
-     "month": 1,
-     "pixels_differ": 27
-    },
-    {
-     "year": 2016,
-     "month": 3,
-     "pixels_differ": 3
-    },
-    {
-     "year": 2016,
-     "month": 4,
-     "pixels_differ": 116
-    },
-    {
-     "year": 2016,
-     "month": 5,
-     "pixels_differ": 53
-    },
-    {
-     "year": 2016,
-     "month": 6,
-     "pixels_differ": 317
-    },
-    {
-     "year": 2016,
-     "month": 7,
-     "pixels_differ": 212
-    },
-    {
-     "year": 2016,
-     "month": 8,
-     "pixels_differ": 199
-    },
-    {
-     "year": 2016,
-     "month": 9,
-     "pixels_differ": 128
-    },
-    {
-     "year": 2016,
-     "month": 10,
-     "pixels_differ": 355
-    },
-    {
-     "year": 2016,
-     "month": 11,
-     "pixels_differ": 34
-    },
-    {
-     "year": 2016,
-     "month": 12,
-     "pixels_differ": 37
-    },
-    {
-     "year": 2017,
-     "month": 3,
-     "pixels_differ": 147
-    },
-    {
-     "year": 2017,
-     "month": 4,
-     "pixels_differ": 89
-    },
-    {
-     "year": 2017,
-     "month": 5,
-     "pixels_differ": 561
-    },
-    {
-     "year": 2017,
-     "month": 6,
-     "pixels_differ": 335
-    },
-    {
-     "year": 2017,
-     "month": 7,
-     "pixels_differ": 178
-    },
-    {
-     "year": 2017,
-     "month": 8,
-     "pixels_differ": 214
-    },
-    {
-     "year": 2017,
-     "month": 9,
-     "pixels_differ": 199
-    },
-    {
-     "year": 2017,
-     "month": 10,
-     "pixels_differ": 145
-    },
-    {
-     "year": 2017,
-     "month": 11,
-     "pixels_differ": 76
-    },
-    {
-     "year": 2017,
-     "month": 12,
-     "pixels_differ": 9
-    },
-    {
-     "year": 2018,
-     "month": 1,
-     "pixels_differ": 54
-    },
-    {
-     "year": 2018,
-     "month": 3,
-     "pixels_differ": 330
-    },
-    {
-     "year": 2018,
-     "month": 4,
-     "pixels_differ": 225
-    },
-    {
-     "year": 2018,
-     "month": 5,
-     "pixels_differ": 132
-    },
-    {
-     "year": 2018,
-     "month": 6,
-     "pixels_differ": 194
-    },
-    {
-     "year": 2018,
-     "month": 7,
-     "pixels_differ": 127
-    },
-    {
-     "year": 2018,
-     "month": 8,
-     "pixels_differ": 236
-    },
-    {
-     "year": 2018,
-     "month": 9,
-     "pixels_differ": 197
-    },
-    {
-     "year": 2018,
-     "month": 10,
-     "pixels_differ": 336
-    },
-    {
-     "year": 2018,
-     "month": 11,
-     "pixels_differ": 80
-    },
-    {
-     "year": 2018,
-     "month": 12,
-     "pixels_differ": 61
-    },
-    {
-     "year": 2019,
-     "month": 3,
-     "pixels_differ": 199
-    },
-    {
-     "year": 2019,
-     "month": 4,
-     "pixels_differ": 56
-    },
-    {
-     "year": 2019,
-     "month": 5,
-     "pixels_differ": 209
-    },
-    {
-     "year": 2019,
-     "month": 6,
-     "pixels_differ": 124
-    },
-    {
-     "year": 2019,
-     "month": 7,
-     "pixels_differ": 161
-    },
-    {
-     "year": 2019,
-     "month": 8,
-     "pixels_differ": 148
-    },
-    {
-     "year": 2019,
-     "month": 9,
-     "pixels_differ": 514
-    },
-    {
-     "year": 2019,
-     "month": 10,
-     "pixels_differ": 203
-    },
-    {
-     "year": 2019,
-     "month": 11,
-     "pixels_differ": 25
-    },
-    {
-     "year": 2019,
-     "month": 12,
-     "pixels_differ": 31
-    }
-   ]
+   "months_mismatched": []
   },
   "surrogate_importance_summary": {
    "n_month_years": 120,
@@ -2531,8 +2055,8 @@
    }
   ],
   "pipeline4_check": {
-   "months_mismatched_vs_preclassified_pickle": 0,
-   "pipeline5_months_mismatched_vs_pickle": 95
+   "months_mismatched_vs_preclassified_pickle": 95,
+   "pipeline5_months_mismatched_vs_pickle": 0
   }
  },
  "dbscan": {
@@ -15181,5 +14705,37 @@
     }
    }
   }
+ },
+ "sigma_variants": {
+  "old_weekly_climatology_nodepth": 13.20879581918891,
+  "old_weekly_climatology_depth10": 12.210445693948872,
+  "redo_monthly_per_month_year_depth10": 12.873035164479015,
+  "redo_monthly_per_month_year_nodepth": 13.482510515015148,
+  "monthly_climatology_depth10": 12.079687246799546,
+  "note": "sd uses ddof=1 here (pandas default, as in the old notebook); redo/sigma.py uses ddof=0, which changes the redo % by < 0.01 pp at ~40k pixels per map."
+ },
+ "cdom_clip_check": {
+  "files_used": 5364,
+  "files_failed": 0,
+  "step": 1,
+  "finite": 140071740,
+  "rrs443_le0": 163308,
+  "rrs547_le0": 72400,
+  "either_le0": 178825,
+  "computed": 139892915,
+  "a_lt0": 0,
+  "a_gt1": 165937,
+  "pct_dropped_rrs_le0": 0.12766672278076935,
+  "pct_a_gt1_of_computed": 0.11861715798830841,
+  "a_min": 7.325319810914298e-06,
+  "a_max": 8978.156261404134,
+  "s275_range": [
+   0.0015388129888230324,
+   0.3308181501010854
+  ],
+  "s300_range": [
+   0.004265246222429085,
+   0.07733160283035449
+  ]
  }
 }

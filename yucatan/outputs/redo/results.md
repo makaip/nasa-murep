@@ -99,7 +99,7 @@ Global k=3 centroids (physical units SST degC, log10 Chl, SSL m) and cluster fra
 
 Surrogate RF (100 trees, depth 5) predicting the IF score from transformed features, fitted per month-year (n=120): SST anomaly importance 53.6% +/- 29.2% (range 0.3-98.9%), SSL anomaly 46.4% +/- 29.2%. By calendar month (SST %): Jan 89, Feb 89, Mar 69, Apr 60, May 60, Jun 36, Jul 37, Aug 44, Sep 21, Oct 16, Nov 42, Dec 80.
 
-**Model mismatch found:** `figs/bayth_preclassified.pkl` (used by the existing violin and map figures) reproduces exactly with `iforest_pipeline4.joblib` (0 month-years differ) but not with the configured `iforest_pipeline5.joblib` (95 of 120 month-years differ). Same recipe, different fit. pipeline5 vs pipeline4 zone IoU: mean 0.752, median 0.832; overall zone coverage 2.21% (p5) vs 2.49% (p4). Results here use pipeline5.
+**Shared pickle check:** `figs/bayth_preclassified.pkl` (read by every violin, map and scatter script) vs the redo pipeline5 zones: 0 of 120 month-years differ; vs pipeline4: 95 differ. (Until 2026-11-08 the pickle was a pipeline4 build; it was regenerated with pipeline5, old copy in `figs/_backup_pipeline4_2026-11-08/`.) pipeline5 vs pipeline4 zone IoU: mean 0.752, median 0.832; overall zone coverage 2.21% (p5) vs 2.49% (p4). Results here use pipeline5.
 
 ## 2d. DBSCAN (appendix)
 
@@ -330,7 +330,7 @@ May-Sep share and 'how often each approach worked': see section 1 tables.
    along the whole shelf edge (see figs/zonemap_2018_07).
 8. **Depth mask removes the coldest core.** In July 2018 the coldest monthly-mean SST is in water shallower than 10 m
    along the north coast, which is excluded from every method. The zone is what is cold *beyond* 10 m.
-9. **Bugs / inconsistencies in the existing figure pipeline** (not fixed there, only documented):
+9. **Bugs / inconsistencies in the existing figure pipeline** (as found on 2026-11-07; the pickle-model and scatterplot items were FIXED on 2026-11-08, see section 10):
    - `figs/bayth_preclassified.pkl` (violins, monthly/yearly maps) was produced with `iforest_pipeline4.joblib`, while
      every script's `MODEL_PATH` points to `iforest_pipeline5.joblib`. 95/120 month-year maps differ (IoU p4-p5 ~ 0.75-0.83).
    - `scatterplots/common.py` classifies **per day** at the **95th** percentile with a **-20 m** depth cut, while the
@@ -386,7 +386,7 @@ nasa-murep = this repo (new). nasa-murep-local = `F:\Programming\GitHub\nasa-mur
 | **DBSCAN** (`redo/dbscan.py`) | New reimplementation; eps/min_samples from nasa-murep-local `cdom_sst/experiments/clustering/ssl_dbscan.ipynb` (0.28/50) and `dbscan_clustering.ipynb` (0.27/40, pooled reference). |
 | Stats, comparison, figures | New (`redo/stats.py`, `report.py`, `figures.py`); y-axis rounding reuses nasa-murep `experiments/visualization/plot_style.py`. |
 
-## 8. Violin / map model check (correction to section 5, item 9)
+## 8. Violin / map model check (correction to section 5, item 9; state as of 2026-11-07, resolved 2026-11-08, see section 10)
 
 - At runtime, `violins/all_years.py`, `yearly_class/IF_bayth_*.py` and `raw/bayth.py` (main, including the uncommitted edits) all call
   `load_preclassified()` -> `yucatan/figs/bayth_preclassified.pkl`. None of them classify or load a model. The uncommitted edits only change a
@@ -402,6 +402,78 @@ nasa-murep = this repo (new). nasa-murep-local = `F:\Programming\GitHub\nasa-mur
   every current violin and map, is pipeline4 while all code says pipeline5 (zone IoU p4 vs p5 about 0.75-0.83; coverage 2.5% vs 2.2%), and
   (ii) `scatterplots/common.py` still uses the old per-day pipeline5 / 95th / -20 m rule, so the scatter plots do not match the violins or maps.
   Fix: pick one model, regenerate the pickle (`python bayth_classification.py`), and move the scatterplots onto the pickle.
+
+## 10. 2026-11-08: standardized on iforest_pipeline5 (single shared classification)
+
+**What was done.** The old pickle was copied to `figs/_backup_pipeline4_2026-11-08/bayth_preclassified_pipeline4.pkl`, together with all
+pre-existing figures. Then `python experiments/visualization/bayth_classification.py` (repo `.venv`, scikit-learn 1.7.2) regenerated
+`figs/bayth_preclassified.pkl` with pipeline5. `scatterplots/common.py` was rewritten to read that pickle instead of classifying each day.
+`generate_all_figures.py` was rerun (exit 0; 88 PNGs regenerated in figs/bayth, histograms, raw, scatterplots, violins). 24 PNGs that no
+current script produces (`figs/yearly_class/*_IF_anom|class.png`, `figs/raw/anom.png`, `figs/raw/class.png`, written by scripts deleted in
+5a3a5d4 and therefore stale pipeline4 outputs) were moved, not deleted, to `figs/_stale_not_produced_by_current_scripts/`. Check:
+`redo/iforest.py` zones vs the new pickle: **0 of 120 month-years differ** (pipeline4: 95 differ). The redo zones were already pipeline5,
+so the redo statistics and figures are unchanged.
+
+**Audit of every script that labels pixels as upwelling** (all identical: model `iforest_pipeline5.joblib`; monthly scoring of the
+month-year mean of same-day-median SST/SSL anomalies; score >= 90th percentile of that month's scores; standardized SST anomaly < -0.5;
+standardized SSL anomaly < 1.0; depth >= 10 m (bathymetry <= -10 m)):
+
+| Script | Source of zone labels | Settings |
+|---|---|---|
+| experiments/visualization/bayth_classification.py | computes them (writes figs/bayth_preclassified.pkl) | the definition above |
+| experiments/visualization/violins/all_years.py | reads the pickle | inherits |
+| experiments/visualization/yearly_class/IF_bayth_all_years.py, IF_bayth_across_years.py | read the pickle | inherits |
+| experiments/visualization/raw/bayth.py | reads the pickle | inherits |
+| experiments/visualization/scatterplots/common.py (+ pooled.py, yearly.py) | reads the pickle (changed 2026-11-08; was per-day, 95th percentile, -20 m) | inherits |
+| experiments/visualization/scatterplots/monthly.py | no zone (calendar May-Sep vs Oct-Apr only) | n/a |
+| experiments/visualization/raw/main.py, histograms/weekly.py | no zone (raw maps / histograms) | n/a |
+| experiments/redo/iforest.py | recomputes via `bayth_classification._classify` (same code, pipeline5); verified identical to the pickle (0/120 differ) | identical |
+| experiments/redo/stats.py, figures.py, corr_diff.py, report.py | read redo/iforest.py zones | identical |
+| experiments/isolation_forest/run.py | exploratory single-window script (80th percentile, no depth mask); not used for any figure | different, not a figure path |
+
+Remaining population difference (not classification): the main-figure scripts count every non-zone pixel in the box, including pixels
+shallower than 10 m and pixels without a monthly class, as "outside". The redo excludes those from both groups. Zone membership is identical.
+
+**-1 sigma rule actually implemented (redo/sigma.py).** For each month-year (y, m), let T_ym(p) be the mean of the daily MUR L4 SST
+(`analysed_sst`, v4 pickle) at pixel p over all days of that month. Let D = {p : GEBCO depth >= 10 m and T_ym(p) finite}. Then
+mu_ym = mean over D of T_ym(p), sd_ym = population sd (ddof 0) over D of T_ym(p), and p is in the zone if p in D and T_ym(p) < mu_ym - sd_ym.
+It is a spatial threshold within each monthly-mean map, applied per month-year. Flagged: **12.87%** of deep pixel-months.
+
+Paper wording vs rules (numbers on v4 from `redo/sigma_variants.py`):
+- Results 2, "-1 sigma threshold relative to the weekly mean SST", matches the OLD notebook rule
+  (nasa-murep-local `cdom_sst/experiments/w_hist/histograms_no_fitting.ipynb`, cells 2/7/8): one climatological SST map per ISO
+  week-of-year (mean of all days in that week across all years); threshold = that map's spatial mean - 1 sd (ddof 1) over all valid pixels,
+  no depth mask. The notebook printed 13.20% on v3; on v4 it gives **13.21%** (12.21% if restricted to depth >= 10 m).
+- Methods, "the coldest -1 sigma tail of the monthly SST distribution (~13% of pixels)": the ~13% figure comes from the weekly-climatology
+  rule above, so "monthly" is inaccurate for the old analysis. It does describe the redo rule (monthly, per month-year: 12.87% with
+  depth >= 10 m, 13.48% without; monthly climatology with depth >= 10 m: 12.08%).
+- Suggested text if the redo rule is used: "pixels whose monthly-mean SST was more than one standard deviation below that month's spatial
+  mean SST (depth >= 10 m; 12.9% of pixel-months)". If the old weekly figures are kept, the Methods should say weekly climatology.
+
+**'v4' vs pipeline4.** 'v4' is the data pickle version (`yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl`). It is unrelated
+to `iforest_pipeline4.joblib`. Everything here uses the v4 data; IF results use pipeline5.
+
+**a_CDOM(412) and slope retrieval / clipping** (`data/preprocessing/pickler_utils.py`, coefficients `pickler_config.py`):
+ln a_CDOM(412) = -3.070 - 1.285 ln Rrs443 + 1.107 ln Rrs547, then a = exp(ln a). So a is always > 0 and can never be negative. Pixels
+with Rrs443 <= 0 or Rrs547 <= 0 have no log and are dropped (NaN) before binning. Values outside [MIN_CDOM, MAX_CDOM] = [0, 1] are
+set to NaN (dropped), not clamped. S275-295 = exp(-3.258 + 0.336 ln Rrs443 - 0.279 ln Rrs547) and
+S300-600 = exp(-3.640 + 0.186 ln Rrs443 - 0.146 ln Rrs547) are also always positive and are not range-checked.
+Raw-pixel counts over all 5,364 AQUA MODIS L2 OC files 2010-2019 in the pickler box (`redo/cdom_clip_check.py`, no flag masking,
+same as the pickler):
+
+| Quantity | Count | % |
+|---|---|---|
+| pixels with finite Rrs443 and Rrs547 | 140,071,740 | 100 |
+| dropped because Rrs443 <= 0 or Rrs547 <= 0 | 178,825 (Rrs443 <= 0: 163,308; Rrs547 <= 0: 72,400) | 0.128 |
+| a_CDOM computed | 139,892,915 | |
+| a_CDOM < 0 | 0 | 0 |
+| a_CDOM > 1 (dropped by the clip) | 165,937 | 0.119 of computed |
+| raw a_CDOM range | 7.3e-6 to 8978 m^-1 | |
+| raw S275-295 range / S300-600 range (no clip) | 0.0015-0.331 / 0.0043-0.077 nm^-1 | |
+
+So the clip removes only implausible values (up to ~9000 m^-1, from near-zero Rrs443) on 0.12% of raw pixels, and negative a_CDOM
+cannot occur with this log-space MLR. Negative values could only come from a different (linear) algorithm or the older v3 data. Minor
+inconsistency: those 0.12% of pixels lose a_CDOM but keep their slopes, because the slopes are not range-checked.
 
 ## 9. Significance of rho_in - rho_out (a_CDOM(412) vs Chl-a, Spearman)
 

@@ -14,7 +14,7 @@ import sys
 
 HERE = Path(__file__).resolve().parent
 STEPS = [["sigma.py"], ["iforest.py"], ["kmeans.py"], ["dbscan.py"],
-         ["stats.py", "sigma", "iforest", "kmeans", "kmeans_month"], ["figures.py"], ["kmeans_compare.py"],
+         ["stats.py", "sigma", "iforest", "kmeans", "kmeans_month"], ["figures.py"], ["kmeans_compare.py"], ["sigma_variants.py"],
          ["corr_diff.py"], ["report.py"], ["corr_diff.py", "--md-only"], ["results_index.py"]]
 
 for step in STEPS:

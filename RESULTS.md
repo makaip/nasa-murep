@@ -7,6 +7,7 @@ Single index of every key number in the redo (branch `redo-analysis`, repo nasa-
 - 2026-11-07: Initial redo on one consistent setup (v4, 2010-2019, depth >= 10 m, monthly zone maps): -1 sigma, IF (pipeline5), K-means, DBSCAN, inside/outside stats, figures (commit 15054e9).
 - 2026-11-07: Added K-means preprocessing comparison (exact old-notebook replication, unscaled vs StandardScaler vs Yeo-Johnson), provenance table, violin/model check with correction (commit 4a633b0).
 - 2026-11-07: Added corr_diff.py significance tests of rho_in - rho_out (naive / n_eff Fisher z, block bootstrap, Wilcoxon); created this index; report.py now keeps hand-written sections in report_static.md.
+- 2026-11-08: Standardized on iforest_pipeline5: regenerated figs/bayth_preclassified.pkl (pipeline4 copy and all old figures in figs/_backup_pipeline4_2026-11-08/), scatterplots/common.py now reads the pickle, generate_all_figures.py rerun; redo IF zones = pickle (0/120 month-years differ), so redo numbers are unchanged. Added -1 sigma rule formula and variants (sigma_variants.py), raw-L2 a_CDOM clip check (cdom_clip_check.py), script audit (results.md section 10).
 
 ## Data and setup
 
@@ -15,7 +16,8 @@ Single index of every key number in the redo (branch `redo-analysis`, repo nasa-
 | Data | v4 pickle, 3652 days 2010-01-01..2019-12-31, 250x250 grid | redo/common.py | results.json `setup` |
 | Depth mask | bathymetry <= -10 m: 41,144 pixels | redo/common.py | results.json `setup` |
 | Zone maps | one per month-year (120) + 12 climatology; daily pixels labelled by their month-year map | redo/sigma.py, iforest.py, kmeans.py, dbscan.py | outputs/redo/cache/zones/*.npz (git-ignored) |
-| IF model | iforest_pipeline5.joblib (pipeline4 run as sensitivity) | redo/iforest.py | results.json `iforest` |
+| IF model | iforest_pipeline5.joblib (pipeline4 run as sensitivity); shared pickle figs/bayth_preclassified.pkl = pipeline5 since 2026-11-08 (0/120 month-years differ from redo zones) | redo/iforest.py, visualization/bayth_classification.py | results.json `iforest` |
+| -1 sigma rule | per month-year: monthly-mean MUR SST < spatial mean - 1 sd over depth >= 10 m pixels | redo/sigma.py | results.md section 10 |
 
 ## Method coverage
 
@@ -70,6 +72,18 @@ Taper, all classified pixels, rho by a412 quartile: Q1 0.67, Q2 0.78, Q3 0.96, Q
 
 Recommended for the paper: the month-year block bootstrap CI (c1), with the Wilcoxon test over month-years (d) as support. Both treat the month-year as the independent unit, which matches how zones are defined, and make no parametric autocorrelation model. Report the naive p only as an illustration of why it is not used.
 
+### -1 sigma: % of pixels flagged by each rule on v4 (redo/sigma_variants.py -> results.json `sigma_variants`)
+
+| Rule | % flagged |
+|---|---|
+| Redo: monthly-mean per month-year, depth >= 10 m (used here) | 12.87 |
+| Redo rule without depth mask | 13.48 |
+| Monthly climatology, depth >= 10 m | 12.08 |
+| Old paper rule: week-of-year climatology, all pixels (w_hist notebook; 13.20% on v3) | 13.21 |
+| Old rule with depth >= 10 m | 12.21 |
+
+a_CDOM clip check, raw L2 pixels (5364 files, redo/cdom_clip_check.py): 140,071,740 with finite Rrs; 178,825 (0.128%) dropped for Rrs <= 0; a_CDOM < 0: 0; a_CDOM > 1 (dropped): 165,937 (0.119%); raw max 8978 m^-1.
+
 ## Method agreement
 
 - -1 sigma vs IF zone IoU: mean 0.123, median 0.067; 86.5% of IF zone pixels lie inside the -1 sigma zone (redo/report.py; results.md section 4; results.json `comparison`).
@@ -118,10 +132,12 @@ PNGs are git-ignored by the repo's global `*.png` rule; the PDFs are committed a
 
 ## Known issues
 
-1. `yucatan/figs/bayth_preclassified.pkl` (used by the current violins/maps on main) was produced with `iforest_pipeline4`; all code points to pipeline5. Violins and maps agree with each other but are pipeline4. Fix: choose a model and rerun `bayth_classification.py`.
-2. `experiments/visualization/scatterplots/common.py` still classifies per day (pipeline5, 95th percentile, -20 m), so the scatterplots on main do not match the violins/maps.
-3. The redo -1 sigma rule (monthly spatial mean - 1 sd, depth >= 10 m) differs from the old paper rule in nasa-murep-local `w_hist` (week-of-year mean - 1 sd pooled over all years/pixels, v3, no depth mask). Numbers are not comparable one-to-one.
-4. `redo/kmeans.py` is a reimplementation (monthly maps, no SSL blur), not the old notebook; the exact replica is `redo/kmeans_compare.py`.
+1. RESOLVED 2026-11-08: `yucatan/figs/bayth_preclassified.pkl` was a pipeline4 build while code said pipeline5; regenerated with pipeline5 (pipeline4 copy kept in figs/_backup_pipeline4_2026-11-08/). All figure scripts now read this one pickle (audit: results.md section 10).
+2. RESOLVED 2026-11-08: `scatterplots/common.py` classified per day (95th percentile, -20 m); it now reads the pickle.
+3. -1 sigma: the redo rule (per month-year monthly-mean MUR SST < spatial mean - 1 sd over depth >= 10 m pixels; 12.87%) differs from the old paper rule (week-of-year climatological map, spatial mean - 1 sd, all pixels, no depth mask; 13.20% on v3, 13.21% on v4). Paper Methods says 'monthly ... ~13%', but ~13% came from the weekly rule; Results 2 says 'weekly', which matches the old rule. See results.md section 10.
+4. `redo/kmeans.py` is a reimplementation (monthly maps, no SSL blur), not the old notebook; the exact replica is `redo/kmeans_compare.py`. No correctness issue.
 5. a_CDOM and both slopes are deterministic functions of Rrs443/Rrs547, and Chl-a is a band ratio too, so CDOM-Chl correlations and their inside/outside differences are largely algorithmic.
-6. v4 has no negative a_CDOM (clipped to [0, 1] in preprocessing).
-7. Section 6 of results.md (K-means comparison) is static text in `redo/report_static.md`; this index reads the live numbers from results.json.
+6. No negative a_CDOM is possible (log-space MLR, a = exp(.)). Raw L2: 0.128% of pixels dropped for Rrs <= 0 and 0.119% dropped for a_CDOM > 1 (raw max ~9000 m^-1); slopes are never clipped, so those 0.119% keep slopes but lose a_CDOM (redo/cdom_clip_check.py).
+7. Main-figure scripts count shallow (< 10 m) and unclassified pixels as 'outside'; the redo excludes them. Zone membership is identical.
+8. 'v4' = data pickle version, unrelated to iforest_pipeline4.
+9. Section 6 of results.md (K-means comparison) and section 10 are static text in `redo/report_static.md`; this index reads the live numbers from results.json.

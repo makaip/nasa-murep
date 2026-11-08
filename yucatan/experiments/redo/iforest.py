@@ -88,5 +88,5 @@ def main(model_path=c.MODEL_PATH, name="iforest"):
 
 if __name__ == "__main__":
     main()
-    # sensitivity: pipeline4 is the model the existing figs/bayth_preclassified.pkl was built with
+    # sensitivity: pipeline4 built the pre-2026-11-08 pickle (backup: figs/_backup_pipeline4_2026-11-08/)
     main(c.MODEL_PATH.parent / "iforest_pipeline4.joblib", "iforest_p4")

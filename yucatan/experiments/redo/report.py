@@ -136,7 +136,7 @@ def main():
         "iou_kmeans_vs_iforest": pair_iou("kmeans", "iforest"),
         "iou_iforest_p5_vs_p4": pair_iou("iforest_p4", "iforest"),
     }
-    for extra in ("kmeans_compare", "corr_diff"):
+    for extra in ("kmeans_compare", "corr_diff", "sigma_variants", "cdom_clip_check"):
         f = c.CACHE_DIR / f"{extra}.json"
         if f.exists():
             res[extra] = json.load(open(f))
@@ -222,10 +222,10 @@ def write_md(r):
              f"+/- {100*si['ssl_anom_sd']:.1f}%. By calendar month (SST %): " +
              ", ".join(f"{c.MONTH_NAMES[int(m)-1]} {100*v:.0f}" for m, v in si["by_calendar_month_sst_mean"].items()) + ".\n")
     pc = r["comparison"]["iou_iforest_p5_vs_p4"]
-    L.append(f"**Model mismatch found:** `figs/bayth_preclassified.pkl` (used by the existing violin and map figures) reproduces "
-             f"exactly with `iforest_pipeline4.joblib` ({ifo['pipeline4_check']['months_mismatched_vs_preclassified_pickle']} "
-             f"month-years differ) but not with the configured `iforest_pipeline5.joblib` "
-             f"({ifo['pipeline4_check']['pipeline5_months_mismatched_vs_pickle']} of 120 month-years differ). Same recipe, different fit. "
+    L.append(f"**Shared pickle check:** `figs/bayth_preclassified.pkl` (read by every violin, map and scatter script) vs the redo "
+             f"pipeline5 zones: {ifo['pipeline4_check']['pipeline5_months_mismatched_vs_pickle']} of 120 month-years differ; vs pipeline4: "
+             f"{ifo['pipeline4_check']['months_mismatched_vs_preclassified_pickle']} differ. (Until 2026-11-08 the pickle was a pipeline4 "
+             "build; it was regenerated with pipeline5, old copy in `figs/_backup_pipeline4_2026-11-08/`.) "
              f"pipeline5 vs pipeline4 zone IoU: mean {pc['mean']:.3f}, median {pc['median']:.3f}; overall zone coverage "
              f"{cov['iforest']['pct_overall_pixel_months']:.2f}% (p5) vs {cov['iforest_p4']['pct_overall_pixel_months']:.2f}% (p4). "
              "Results here use pipeline5.\n")
