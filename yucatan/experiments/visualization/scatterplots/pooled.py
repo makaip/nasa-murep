@@ -10,12 +10,13 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 
 from common import build_all_data, FIGS_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from plot_style import apply_nice_xaxis, nice_log_limits
+from plot_style import nice_log_limits
 
 OUTPUT_DIR = os.path.join(FIGS_ROOT, "chlor_vs_cdom_upwelling_zones_pooled")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -42,6 +43,7 @@ def plot_zones(data_subset, filename_suffix):
     axes[0].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
     axes[0].set_ylabel("Chlorophyll-a")
     axes[0].set_yscale("log")
+    axes[0].set_xscale("log")
 
     sns.scatterplot(
         ax=axes[1], data=zone_out, x="cdom412", y="chlor",
@@ -50,10 +52,13 @@ def plot_zones(data_subset, filename_suffix):
     axes[1].set_title("Outside Upwelling")
     axes[1].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
     axes[1].set_yscale("log")
+    axes[1].set_xscale("log")
 
-    # Shared axes: round limits outward to clean values. Negative aCDOM values are kept.
-    apply_nice_xaxis(axes[0], min(zone_in["cdom412"].min(), zone_out["cdom412"].min()),
-                     max(zone_in["cdom412"].max(), zone_out["cdom412"].max()))
+    # a_CDOM axis: 0.5-99.5th percentile of the plotted points, rounded out to whole decades.
+    x_all = np.concatenate([zone_in["cdom412"].to_numpy(), zone_out["cdom412"].to_numpy()])
+    x_limits = nice_log_limits(*np.percentile(x_all, [0.5, 99.5]))
+    if x_limits is not None:
+        axes[0].set_xlim(*x_limits)
     y_limits = nice_log_limits(min(zone_in["chlor"].min(), zone_out["chlor"].min()),
                                max(zone_in["chlor"].max(), zone_out["chlor"].max()))
     if y_limits is not None:

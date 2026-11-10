@@ -2,4 +2,10 @@
 __pycache__/
 *.joblib
 *.png
-yucatan/figs/
+
+# figures are tracked (2026-11-08); data/pickles, backups and stale figures are not
+yucatan/figs/*.pkl
+yucatan/figs/_backup_pipeline4_2026-11-08/
+yucatan/figs/_stale_not_produced_by_current_scripts/
+!yucatan/figs/**/*.png
+!yucatan/outputs/**/*.png

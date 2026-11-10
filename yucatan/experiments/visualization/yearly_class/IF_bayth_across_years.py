@@ -24,8 +24,8 @@ def plot_climatology(data):
     for month, ax in enumerate(axes.ravel(), 1):
         record = data["climatology"].get(month)
         ax.set_extent([-92.20216, -85.61256, 19.57871, 22.86906], crs=ccrs.PlateCarree())
-        ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.8)
-        ax.add_feature(cfeature.COASTLINE, linewidth=1.0)
+        ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.8, zorder=3)
+        ax.add_feature(cfeature.COASTLINE, linewidth=1.0, zorder=4)
         if record is None:
             ax.set_title(f"{MONTH_NAMES[month - 1]}\nNo Data")
             continue

@@ -233,7 +233,7 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
 
     # Mark empty slots so missing violins read as intentional, not as plotting errors.
     # x in data coords, y in axes coords (fraction of the axis height).
-    marker_style = dict(marker='*', linestyle='none', color='red', markeredgecolor='black',
+    marker_style = dict(marker='*', linestyle='none', color='black', markeredgecolor='black',
                         markersize=14)
     if no_upwelling_positions:
         ax.plot(no_upwelling_positions, [0.05] * len(no_upwelling_positions),
@@ -247,8 +247,8 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
         Patch(facecolor='blue', edgecolor='black', alpha=0.60, label='Non-upwelling'),
     ]
     if no_upwelling_positions:
-        handles.append(Line2D([], [], label='No upwelling zone this month', **marker_style))
-    ax.legend(handles=handles, loc='best')
+        handles.append(Line2D([], [], label='No data', **marker_style))
+    ax.legend(handles=handles, loc='upper right')
 
     plt.tight_layout()
     return fig, f"{var_title.replace(':', '_').replace(' ', '_')}_{year_str}.png"

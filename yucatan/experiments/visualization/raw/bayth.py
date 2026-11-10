@@ -28,13 +28,12 @@ def plot_year(data, year):
     for month, ax in enumerate(axes.ravel(), 1):
         record = records.get(month)
         ax.set_extent([LON_MIN, LON_MAX, LAT_MIN, LAT_MAX], crs=ccrs.PlateCarree())
-        ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.8)
-        ax.add_feature(cfeature.COASTLINE, linewidth=1.0)
+        ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.8, zorder=3)
+        ax.add_feature(cfeature.COASTLINE, linewidth=1.0, zorder=4)
         if record is None:
             ax.set_title(f"{MONTH_NAMES[month - 1]}\nNo Data")
             continue
         mesh = ax.pcolormesh(data["lon_grid"], data["lat_grid"], record["classes"], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), shading="auto")
-        ax.contour(data["lon_grid"], data["lat_grid"], data["bathymetry"], levels=[data["bayth_threshold"]], colors="limegreen", linewidths=1.2, transform=ccrs.PlateCarree())
         if (record["classes"] == 1).any():
             ax.set_title(MONTH_NAMES[month - 1])
         else:
