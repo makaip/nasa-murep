@@ -164,7 +164,7 @@ def plot_weekly_histograms(available_products, weekly_data, product_info):
 
         # ax.set_title(f"{product_info[p]['title']} (2018)", fontweight='bold')
         label_weeks_by_month(ax)
-        ax.set_xlabel('Date (weekly bins)')
+        ax.set_xlabel('Date')
         ax.set_ylabel(f"{product_info[p]['unit']}")
         ax.set_ylim(*range_y)
         ax.yaxis.set_major_locator(MaxNLocator(nbins=6, steps=NICE_STEPS))
