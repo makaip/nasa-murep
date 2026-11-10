@@ -247,7 +247,7 @@ def plot_violin(year_str, values, labels, is_upwelling, var_title, y_unit, y_lim
         Patch(facecolor='blue', edgecolor='black', alpha=0.60, label='Non-upwelling'),
     ]
     if no_upwelling_positions:
-        handles.append(Line2D([], [], label='No data.', **marker_style))
+        handles.append(Line2D([], [], label='No data', **marker_style))
     ax.legend(handles=handles, loc='upper right')
 
     plt.tight_layout()

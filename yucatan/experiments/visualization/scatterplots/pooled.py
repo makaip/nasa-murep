@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 
 from common import build_all_data, FIGS_ROOT
@@ -53,9 +54,9 @@ def plot_zones(data_subset, filename_suffix):
     axes[1].set_yscale("log")
     axes[1].set_xscale("log")
 
-    # Shared log-log axes: limits rounded outward to whole decades.
-    x_limits = nice_log_limits(min(zone_in["cdom412"].min(), zone_out["cdom412"].min()),
-                               max(zone_in["cdom412"].max(), zone_out["cdom412"].max()))
+    # a_CDOM axis: 0.5-99.5th percentile of the plotted points, rounded out to whole decades.
+    x_all = np.concatenate([zone_in["cdom412"].to_numpy(), zone_out["cdom412"].to_numpy()])
+    x_limits = nice_log_limits(*np.percentile(x_all, [0.5, 99.5]))
     if x_limits is not None:
         axes[0].set_xlim(*x_limits)
     y_limits = nice_log_limits(min(zone_in["chlor"].min(), zone_out["chlor"].min()),

@@ -29,9 +29,9 @@ FIGS = [
      "Supplement (K-means section)."),
     ("violins_kmeans_month", "Same layout for per-month K-means (k=3, standardized within each month-year).",
      "Supplement (K-means section)."),
-    ("scatter_a412_chl_loglog", "a_CDOM(412) vs Chl-a, log-log, inside vs outside, -1 sigma and IF, pooled and May 2018, with Spearman rho.",
+    ("scatter_a412_chl_loglog", "a_CDOM(412) vs Chl-a, log-log, inside vs outside, -1 sigma and IF, pooled and May 2018, with Spearman rho; a_CDOM < 10^-3.5 dropped (1,324 points).",
      "Main text: replaces the CDOM vs Chl scatter plot (answers the log-log request)."),
-    ("zonemap_2018_07", "-1 sigma vs IF zone maps, July 2018, on monthly-mean SST (cmocean ice).",
+    ("zonemap_2018_07", "-1 sigma vs IF zone maps, July 2018, as red outlines on monthly-mean SST (cmocean ice).",
      "Main text: method comparison map (representative month)."),
     ("zonemap_2018_05", "Same for May 2018.", "Supplement."),
 ]

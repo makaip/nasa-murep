@@ -124,8 +124,8 @@ Paper figure numbers are not filled in because the draft (.docx) was not opened;
 | figs/violins_sigma.png / .pdf | Same layout for the -1 sigma SST zone (new monthly spatial rule). | Main text or supplement, next to the IF violins, for the method comparison. |
 | figs/violins_kmeans.png / .pdf | Same layout for global K-means (k=3, StandardScaler, monthly maps); the zone is mostly a winter cluster. | Supplement (K-means section). |
 | figs/violins_kmeans_month.png / .pdf | Same layout for per-month K-means (k=3, standardized within each month-year). | Supplement (K-means section). |
-| figs/scatter_a412_chl_loglog.png / .pdf | a_CDOM(412) vs Chl-a, log-log, inside vs outside, -1 sigma and IF, pooled and May 2018, with Spearman rho. | Main text: replaces the CDOM vs Chl scatter plot (answers the log-log request). |
-| figs/zonemap_2018_07.png / .pdf | -1 sigma vs IF zone maps, July 2018, on monthly-mean SST (cmocean ice). | Main text: method comparison map (representative month). |
+| figs/scatter_a412_chl_loglog.png / .pdf | a_CDOM(412) vs Chl-a, log-log, inside vs outside, -1 sigma and IF, pooled and May 2018, with Spearman rho; a_CDOM < 10^-3.5 dropped (1,324 points). | Main text: replaces the CDOM vs Chl scatter plot (answers the log-log request). |
+| figs/zonemap_2018_07.png / .pdf | -1 sigma vs IF zone maps, July 2018, as red outlines on monthly-mean SST (cmocean ice). | Main text: method comparison map (representative month). |
 | figs/zonemap_2018_05.png / .pdf | Same for May 2018. | Supplement. |
 
 PNGs are git-ignored by the repo's global `*.png` rule; the PDFs are committed and the PNGs exist on disk.

@@ -103,11 +103,14 @@ def violins(method):
     handles = [Patch(facecolor=UP_COLOR, edgecolor="black", alpha=0.60, label="Upwelling"),
                Patch(facecolor=NON_COLOR, edgecolor="black", alpha=0.60, label="Non-upwelling")]
     if any_star:
-        handles.append(Line2D([], [], label="No data.", **STAR))
+        handles.append(Line2D([], [], label="No data", **STAR))
     axes[0].legend(handles=handles, loc="upper right")
     axes[0].set_title(f"{METHOD_LABEL[method]}: 2010-2019 pooled, depth $\\geq$ 10 m")
     fig.tight_layout()
     save(fig, f"violins_{method}")
+
+
+A412_CLIP = 10 ** -3.5   # scatter only: drop a_CDOM(412) below this (also excluded from n and rho)
 
 
 def scatter():
@@ -118,7 +121,7 @@ def scatter():
     fig, axes = plt.subplots(2, 2, figsize=(10, 9), sharex=True, sharey=True)
     for row, method in enumerate(("sigma", "iforest")):
         L = st.labels_for(method)
-        ok = np.isfinite(A) & np.isfinite(C) & (A > 0) & (L >= 0)
+        ok = np.isfinite(A) & np.isfinite(C) & (A >= A412_CLIP) & (L >= 0)
         a, chl, ins, mm = A[ok], 10 ** C[ok], L[ok] == 1, my[ok]
         for col, (title, sel) in enumerate((("Pooled 2010-2019", np.ones(len(a), bool)),
                                             ("May 2018", mm == may2018))):
@@ -141,6 +144,9 @@ def scatter():
         ax.set_xlabel("Chl-a (mg m$^{-3}$)")
     for ax in axes[:, 0]:
         ax.set_ylabel(r"$a_{\mathrm{CDOM}}(412)$ (m$^{-1}$)")
+    # Zoom on the bulk of the points; keep the automatic a_CDOM upper bound.
+    axes[0, 0].set_xlim(10 ** -1.75, 10 ** 1.25)
+    axes[0, 0].set_ylim(10 ** -2.75, axes[0, 0].get_ylim()[1])
     axes[0, 1].legend(handles=[Patch(color="#c0392b", label="Inside zone"),
                                Patch(color="#2e6db4", label="Outside zone")], loc="lower right", frameon=False)
     fig.tight_layout()
@@ -160,9 +166,8 @@ def zonemap(year=2018, month=7):
         z = c.load_zones(method)[0][(year, month)]
         ax.set_extent([lon2.min(), lon2.max(), lat2.min(), lat2.max()], crs=ccrs.PlateCarree())
         mesh = ax.pcolormesh(lon2, lat2, sst, cmap=cmocean.cm.ice, shading="auto", transform=ccrs.PlateCarree())
-        zone = np.where(z == 1, 1.0, np.nan)
-        ax.pcolormesh(lon2, lat2, zone, cmap=matplotlib.colors.ListedColormap(["#d62728"]), shading="auto",
-                      alpha=0.85, transform=ccrs.PlateCarree())
+        ax.contour(lon2, lat2, (z == 1).astype(float), levels=[0.5], colors="#d62728", linewidths=1.2,
+                   transform=ccrs.PlateCarree())
         ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.6, zorder=3)
         gl = ax.gridlines(draw_labels=True, linewidth=0)
         gl.top_labels = gl.right_labels = False
