@@ -31,7 +31,7 @@ FIGS = [
      "Supplement (K-means section)."),
     ("scatter_a412_chl_loglog", "a_CDOM(412) vs Chl-a, log-log, inside vs outside, -1 sigma and IF, pooled and May 2018, with Spearman rho.",
      "Main text: replaces the CDOM vs Chl scatter plot (answers the log-log request)."),
-    ("zonemap_2018_07", "-1 sigma vs IF zone maps, July 2018, on monthly-mean SST, 10 m contour.",
+    ("zonemap_2018_07", "-1 sigma vs IF zone maps, July 2018, on monthly-mean SST (cmocean ice).",
      "Main text: method comparison map (representative month)."),
     ("zonemap_2018_05", "Same for May 2018.", "Supplement."),
 ]

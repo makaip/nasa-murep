@@ -17,7 +17,7 @@ SCRIPTS = [
     "violins_all_years/main.py",
     "yearly_class/IF_bayth_all_years.py",
     "yearly_class/IF_bayth_across_years.py",
-    "raw/bayth.py",
+    # raw/bayth.py is no longer run: its 2018_class.png duplicated bayth/2018_IF_class.png.
 ]
 
 

@@ -1,14 +1,15 @@
 """Figures for the redo analysis -> outputs/redo/figs (PNG + PDF, 600 dpi).
 
   * violins_<method>.png : inside vs outside by calendar month (2010-2019 pooled) for
-    a_CDOM(412), S275-295, S300-600, log10 Chl-a. All a_CDOM values kept (v4 has no
-    negative a_CDOM: the MLR output is exp(ln a) and clipped to [0, 1] in preprocessing).
-    Display only: each violin drawn from a random subsample of <= 20k values and trimmed
-    to its 0.5-99.5th percentile; statistics use all values. Red asterisk = month with
-    no upwelling-zone pixels (< 2 values inside).
+    a_CDOM(412), S275-295, S300-600, log10 Chl-a, styled like the original per-year
+    violins (visualization/violins/all_years.py): red/blue bodies, black median and
+    extrema bars, 3-sigma trim, black star = no data inside the zone that month.
+    Display only: each violin is drawn from a random subsample of <= 20k values (trimmed
+    min/max kept); statistics use all values.
   * scatter_a412_chl_loglog.png : a_CDOM(412) vs Chl-a, log-log, inside vs outside, for
     -1 sigma and IF, pooled and May 2018.
-  * zonemap_<year>_<month>.png : -1 sigma vs IF zone maps side by side.
+  * zonemap_<year>_<month>.png : -1 sigma vs IF zone maps side by side on monthly-mean
+    SST (cmocean 'ice', so the red zone stands out); no bathymetry contour.
 """
 
 import sys
@@ -43,54 +44,68 @@ def save(fig, name):
 
 
 def _prep(v):
+    """3-sigma trim (as in visualization/violins/all_years.py), then subsample for drawing.
+
+    The subsample keeps the trimmed min and max so the extrema bars are exact."""
+    if v.size > 1:
+        mu, sd = v.mean(), v.std()
+        v = v[(v >= mu - 3 * sd) & (v <= mu + 3 * sd)]
     if v.size > 20_000:
-        v = RNG.choice(v, 20_000, replace=False)
-    lo, hi = np.percentile(v, [0.5, 99.5])
-    return v[(v >= lo) & (v <= hi)]
+        keep = RNG.choice(v.size, 20_000, replace=False)
+        v = np.concatenate([v[keep], [v.min(), v.max()]])
+    return v
+
+
+# Same look as the original per-year violins (visualization/violins/all_years.py).
+UP_COLOR, NON_COLOR = "red", "blue"
+STAR = dict(marker="*", linestyle="none", color="black", markeredgecolor="black", markersize=14)
 
 
 def violins(method):
     P = st.pixel_table()
     L = st.labels_for(method)
     month = np.broadcast_to(P["month"][:, None], L.shape)
-    fig, axes = plt.subplots(4, 1, figsize=(10, 12), sharex=True)
-    no_zone_months = set()
+    fig, axes = plt.subplots(4, 1, figsize=(16, 20), sharex=True)
+    any_star = False
     for ax, (key, A) in zip(axes, P["vals"].items()):
         ok = np.isfinite(A) & (L >= 0)
         v, ins, mon = A[ok], L[ok] == 1, month[ok]
         lo_all, hi_all = np.inf, -np.inf
-        for inside, dx, color in ((True, -0.2, "#c0392b"), (False, 0.2, "#2e6db4")):
+        star_pos = []
+        for inside, dx, color in ((True, -0.2, UP_COLOR), (False, 0.2, NON_COLOR)):
             data, pos = [], []
             for m in c.MONTHS:
                 vv = v[(mon == m) & (ins == inside)]
+                vv = _prep(vv) if vv.size > 1 else vv
                 if vv.size < 2:
                     if inside:
-                        no_zone_months.add(m)
+                        star_pos.append(m + dx)
                     continue
-                vv = _prep(vv)
                 data.append(vv)
                 pos.append(m + dx)
                 lo_all, hi_all = min(lo_all, vv.min()), max(hi_all, vv.max())
             if data:
-                vp = ax.violinplot(data, positions=pos, widths=0.35, showmedians=True, showextrema=False)
+                vp = ax.violinplot(data, positions=pos, widths=0.35, showmeans=False,
+                                   showmedians=True, showextrema=True)
                 for b in vp["bodies"]:
-                    b.set_facecolor(color); b.set_edgecolor("black"); b.set_alpha(0.6)
-                vp["cmedians"].set_edgecolor("black")
+                    b.set_facecolor(color); b.set_edgecolor("black"); b.set_alpha(0.60)
+                for part in ("cbars", "cmins", "cmaxes", "cmedians"):
+                    vp[part].set_edgecolor("black"); vp[part].set_linewidth(1.2)
         apply_nice_yaxis(ax, lo_all, hi_all)
         ax.set_ylabel(VAR_LABEL[key])
-        for m in sorted(no_zone_months):
-            ax.plot(m - 0.2, 0.06, marker="*", color="red", markeredgecolor="black", markersize=12,
-                    transform=ax.get_xaxis_transform(), clip_on=False, linestyle="none")
+        if star_pos:
+            any_star = True
+            ax.plot(star_pos, [0.05] * len(star_pos), transform=ax.get_xaxis_transform(),
+                    clip_on=False, **STAR)
     axes[-1].set_xticks(c.MONTHS)
     axes[-1].set_xticklabels(c.MONTH_NAMES)
     axes[-1].set_xlim(0.5, 12.5)
-    handles = [Patch(facecolor="#c0392b", edgecolor="black", alpha=0.6, label="Inside zone"),
-               Patch(facecolor="#2e6db4", edgecolor="black", alpha=0.6, label="Outside zone")]
-    if no_zone_months:
-        handles.append(Line2D([], [], marker="*", color="red", markeredgecolor="black", markersize=12,
-                              linestyle="none", label="No upwelling zone"))
-    axes[0].legend(handles=handles, loc="upper left", ncol=3, frameon=False)
-    axes[0].set_title(f"{METHOD_LABEL[method]}: inside vs outside, 2010-2019, depth $\\geq$ 10 m")
+    handles = [Patch(facecolor=UP_COLOR, edgecolor="black", alpha=0.60, label="Upwelling"),
+               Patch(facecolor=NON_COLOR, edgecolor="black", alpha=0.60, label="Non-upwelling")]
+    if any_star:
+        handles.append(Line2D([], [], label="No data.", **STAR))
+    axes[0].legend(handles=handles, loc="upper right")
+    axes[0].set_title(f"{METHOD_LABEL[method]}: 2010-2019 pooled, depth $\\geq$ 10 m")
     fig.tight_layout()
     save(fig, f"violins_{method}")
 
@@ -135,6 +150,7 @@ def scatter():
 def zonemap(year=2018, month=7):
     import cartopy.crs as ccrs
     import cartopy.feature as cfeature
+    import cmocean
     stacks, meta = c.load_stacks()
     lon2, lat2 = np.meshgrid(meta["lon"], meta["lat"])
     idx = c.month_index(meta)[(year, month)]
@@ -143,12 +159,10 @@ def zonemap(year=2018, month=7):
     for ax, method in zip(axes, ("sigma", "iforest")):
         z = c.load_zones(method)[0][(year, month)]
         ax.set_extent([lon2.min(), lon2.max(), lat2.min(), lat2.max()], crs=ccrs.PlateCarree())
-        mesh = ax.pcolormesh(lon2, lat2, sst, cmap="Greys_r", shading="auto", transform=ccrs.PlateCarree())
+        mesh = ax.pcolormesh(lon2, lat2, sst, cmap=cmocean.cm.ice, shading="auto", transform=ccrs.PlateCarree())
         zone = np.where(z == 1, 1.0, np.nan)
         ax.pcolormesh(lon2, lat2, zone, cmap=matplotlib.colors.ListedColormap(["#d62728"]), shading="auto",
                       alpha=0.85, transform=ccrs.PlateCarree())
-        ax.contour(lon2, lat2, (meta["bathymetry"] <= c.DEPTH_THRESHOLD).astype(float), levels=[0.5],
-                   colors="#1f77b4", linewidths=0.6, transform=ccrs.PlateCarree())
         ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.6, zorder=3)
         gl = ax.gridlines(draw_labels=True, linewidth=0)
         gl.top_labels = gl.right_labels = False

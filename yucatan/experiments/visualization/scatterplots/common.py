@@ -87,7 +87,8 @@ def build_all_data(use_iforest=True, max_days=None):
 
         chlor_arr = np.asarray(chlor, dtype=float).flatten()
         cdom_arr = np.asarray(cdom, dtype=float).flatten()
-        valid = ~(np.isnan(chlor_arr) | np.isnan(cdom_arr)) & bbox_flat
+        # Log-log plots: keep strictly positive values only.
+        valid = ~(np.isnan(chlor_arr) | np.isnan(cdom_arr)) & (chlor_arr > 0) & (cdom_arr > 0) & bbox_flat
         if not np.any(valid):
             continue
 

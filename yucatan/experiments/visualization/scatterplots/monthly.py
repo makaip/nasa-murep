@@ -16,7 +16,7 @@ import seaborn as sns
 from common import build_all_data, FIGS_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from plot_style import apply_nice_xaxis, nice_log_limits
+from plot_style import nice_log_limits
 
 OUTPUT_DIR = os.path.join(FIGS_ROOT, "chlor_vs_cdom_upwelling_months_2010_2019")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -53,6 +53,7 @@ def main():
         axes[0].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
         axes[0].set_ylabel("Chlorophyll-a")
         axes[0].set_yscale("log")
+        axes[0].set_xscale("log")
 
         sns.scatterplot(
             ax=axes[1], data=nonupwelling_pts, x="cdom412", y="chlor",
@@ -61,10 +62,13 @@ def main():
         axes[1].set_title("Non-upwelling Months (Oct-Apr)")
         axes[1].set_xlabel(r"$a_{\text{CDOM}}$ 412 $(m^{-1})$")
         axes[1].set_yscale("log")
+        axes[1].set_xscale("log")
 
-        # Shared axes: round limits outward to clean values. Negative aCDOM values are kept.
-        apply_nice_xaxis(axes[0], min(upwelling_pts["cdom412"].min(), nonupwelling_pts["cdom412"].min()),
-                         max(upwelling_pts["cdom412"].max(), nonupwelling_pts["cdom412"].max()))
+        # Shared log-log axes: limits rounded outward to whole decades.
+        x_limits = nice_log_limits(min(upwelling_pts["cdom412"].min(), nonupwelling_pts["cdom412"].min()),
+                                   max(upwelling_pts["cdom412"].max(), nonupwelling_pts["cdom412"].max()))
+        if x_limits is not None:
+            axes[0].set_xlim(*x_limits)
         y_limits = nice_log_limits(min(upwelling_pts["chlor"].min(), nonupwelling_pts["chlor"].min()),
                                    max(upwelling_pts["chlor"].max(), nonupwelling_pts["chlor"].max()))
         if y_limits is not None:
