@@ -493,9 +493,9 @@ def write_md(o):
           "plus range limits: Chl 0-100 mg m^-3 (pickler_config.py:48-49), a_CDOM(412) <= 1 m^-1 clip.",
           "- SST: **MUR L4** (MUR-JPL-L4-GLOB-v4.1, `analysed_sst`; pickler_config.py:16, 29) in all violins, maps, "
           "IF/sigma classification and K-means. No MODIS SST is used.",
-          "- Current Fig 6 (figs/histograms/sst.png, histograms/weekly.py) draws weekly-normalized SST histograms and computes "
-          "no -1 sigma threshold. No script in this repo makes a -1 sigma binary map; the only code that does is the old "
-          "nasa-murep-local cdom_sst/experiments/w_hist notebooks, which use the week-of-year climatology rule (13.2%).", ""]
+          "- Figure 6 and the 2018 -1 sigma maps (Fig. 7) in the draft were made in nasa-murep-local (w_hist notebooks) "
+          "with the week-of-year climatology rule, which classifies 13.2% of pixels (13.21% on v4 data); the redo monthly "
+          "rule gives 12.87%.", ""]
     (c.OUT_DIR / "paper_stats.md").write_text("\n".join(L), encoding="utf-8")
 
 
