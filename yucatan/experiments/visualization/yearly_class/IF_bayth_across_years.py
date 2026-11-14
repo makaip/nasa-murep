@@ -9,7 +9,14 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from bayth_classification import PICKLE_PATH, load_preclassified
+import numpy as np
+from matplotlib.patches import Patch
+
+from bayth_classification import PICKLE_PATH, deep_mask, load_preclassified
+from depth_cutoff import SHALLOW_LABEL
+
+SHALLOW_COLOR = "#d9d9d9"   # < 10 m: in neither group
+LAND_COLOR = "#8f8f8f"
 
 OUT_DIR = Path(__file__).resolve().parents[3] / "figs" / "bayth"
 MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -17,19 +24,22 @@ MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "
 
 def plot_climatology(data):
     fig, axes = plt.subplots(3, 4, figsize=(28, 10), subplot_kw={"projection": ccrs.PlateCarree()}, dpi=400)
-    cmap = mcolors.ListedColormap(["#1f5fa8", "#c0392b"])
-    norm = mcolors.BoundaryNorm([-1.5, 0, 1.5], cmap.N)
+    cmap = mcolors.ListedColormap(["#1f5fa8", "#c0392b", SHALLOW_COLOR])
+    norm = mcolors.BoundaryNorm([-1.5, 0, 1.5, 2.5], cmap.N)
+    bathy = data["bathymetry"]
+    shallow = ~deep_mask(bathy) & np.isfinite(bathy)
     mesh = None
     any_no_upwelling = False
     for month, ax in enumerate(axes.ravel(), 1):
         record = data["climatology"].get(month)
         ax.set_extent([-92.20216, -85.61256, 19.57871, 22.86906], crs=ccrs.PlateCarree())
-        ax.add_feature(cfeature.LAND, facecolor="lightgray", edgecolor="black", linewidth=0.8, zorder=3)
+        ax.add_feature(cfeature.LAND, facecolor=LAND_COLOR, edgecolor="black", linewidth=0.8, zorder=3)
         ax.add_feature(cfeature.COASTLINE, linewidth=1.0, zorder=4)
         if record is None:
             ax.set_title(f"{MONTH_NAMES[month - 1]}\nNo Data")
             continue
-        mesh = ax.pcolormesh(data["lon_grid"], data["lat_grid"], record["classes"], cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), shading="auto")
+        grid = np.where(shallow, 2.0, record["classes"])
+        mesh = ax.pcolormesh(data["lon_grid"], data["lat_grid"], grid, cmap=cmap, norm=norm, transform=ccrs.PlateCarree(), shading="auto")
         if (record["classes"] == 1).any():
             ax.set_title(MONTH_NAMES[month - 1])
         else:
@@ -42,8 +52,11 @@ def plot_climatology(data):
     if any_no_upwelling:
         fig.text(0.03, 0.01, "* No upwelling zone classified this month", fontsize=12)
     if mesh is not None:
-        cbar = fig.colorbar(mesh, ax=axes.ravel().tolist(), ticks=[-1, 1], fraction=0.02, pad=0.02)
-        cbar.ax.set_yticklabels(["Non-upwelling", "Upwelling"])
+        handles = [Patch(facecolor="#c0392b", edgecolor="black", label="Upwelling"),
+                   Patch(facecolor="#1f5fa8", edgecolor="black", label="Non-upwelling"),
+                   Patch(facecolor=SHALLOW_COLOR, edgecolor="black", label=SHALLOW_LABEL),
+                   Patch(facecolor=LAND_COLOR, edgecolor="black", label="Land")]
+        fig.legend(handles=handles, loc="center left", bbox_to_anchor=(0.905, 0.5), fontsize=14, frameon=False)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT_DIR / "climatology_IF_class.png")
     plt.close(fig)

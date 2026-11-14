@@ -1,6 +1,7 @@
 """Generate and load shared Bayth upwelling classifications."""
 
 from pathlib import Path
+import sys
 import warnings
 
 import joblib
@@ -9,6 +10,8 @@ import pandas as pd
 
 
 YUCATAN_DIR = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(YUCATAN_DIR / "experiments"))
+import depth_cutoff  # noqa: E402  (shared 10 m cutoff)
 DATA_PATH = Path(r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl")
 MODEL_PATH = YUCATAN_DIR / "experiments" / "isolation_forest" / "models" / "iforest_pipeline5.joblib"
 PICKLE_PATH = YUCATAN_DIR / "figs" / "bayth_preclassified.pkl"
@@ -17,7 +20,7 @@ ANOM_VARS = ["sst", "ssl"]
 PERCENTILE_UPWELLING = 90
 SST_ANOM_Z_MAX = -0.5
 SSL_ANOM_Z_MAX = 1.0
-BAYTH_THRESHOLD = -10
+BAYTH_THRESHOLD = depth_cutoff.BATHY_THRESHOLD   # -10.0 m
 
 
 def _is_missing_day(value):
@@ -159,6 +162,11 @@ def generate_preclassified_data(data_path=DATA_PATH, model_path=MODEL_PATH, outp
 
 def load_preclassified(path=PICKLE_PATH):
     return pd.read_pickle(path)
+
+
+def deep_mask(bathymetry):
+    """Pixels deep enough to enter either the inside or the outside group."""
+    return depth_cutoff.deep_mask(bathymetry)
 
 
 if __name__ == "__main__":

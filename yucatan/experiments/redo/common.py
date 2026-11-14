@@ -13,12 +13,15 @@ Setup (applies to every method):
 """
 
 from pathlib import Path
+import sys
 import warnings
 
 import numpy as np
 import pandas as pd
 
 YUCATAN_DIR = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(YUCATAN_DIR / "experiments"))
+import depth_cutoff  # noqa: E402  (shared 10 m cutoff)
 DATA_PATH = Path(r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl")
 MODEL_PATH = YUCATAN_DIR / "experiments" / "isolation_forest" / "models" / "iforest_pipeline5.joblib"
 OUT_DIR = YUCATAN_DIR / "outputs" / "redo"
@@ -29,7 +32,7 @@ ZONE_DIR = CACHE_DIR / "zones"
 YEARS = list(range(2010, 2020))
 MONTHS = list(range(1, 13))
 MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-DEPTH_THRESHOLD = -10.0                 # bathymetry <= -10 m  <=> depth >= 10 m
+DEPTH_THRESHOLD = depth_cutoff.BATHY_THRESHOLD   # bathymetry <= -10 m  <=> depth >= 10 m
 
 # Upwelling-zone bounding box used by the existing violin / scatter scripts
 BBOX_LON = (-92.20216, -85.61256)
@@ -84,8 +87,7 @@ def load_stacks(force=False):
 
 
 def deep_mask(meta):
-    b = meta["bathymetry"]
-    return ~np.isnan(b) & (b <= DEPTH_THRESHOLD)
+    return depth_cutoff.deep_mask(meta["bathymetry"])
 
 
 def bbox_mask(meta):

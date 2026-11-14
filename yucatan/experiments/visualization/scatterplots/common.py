@@ -20,7 +20,7 @@ UPWELLING_LAT_MIN, UPWELLING_LAT_MAX = 19.57871, 22.86906
 # the same source as the violins and maps. A daily pixel is "inside" if its
 # month-year map has class 1 at that pixel.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from bayth_classification import PICKLE_PATH, load_preclassified  # noqa: E402
+from bayth_classification import PICKLE_PATH, deep_mask, load_preclassified  # noqa: E402
 
 
 def load_dataset():
@@ -67,7 +67,8 @@ def build_all_data(use_iforest=True, max_days=None):
     """
     df, metadata, grid_shape = load_dataset()
     in_bbox, _, _ = build_bbox_mask(metadata)
-    bbox_flat = in_bbox.flatten()
+    # depth >= 10 m only: shallow pixels belong to neither the inside nor the outside group
+    bbox_flat = (in_bbox & deep_mask(metadata["bathymetry"])).flatten()
 
     preclassified = load_preclassified(PICKLE_PATH) if use_iforest else None
 

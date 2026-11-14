@@ -9,7 +9,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from bayth_classification import DATA_PATH, PICKLE_PATH, load_preclassified
+from bayth_classification import DATA_PATH, PICKLE_PATH, deep_mask, load_preclassified
 from plot_style import apply_nice_yaxis
 
 # ----------------------------------------------------------------------------
@@ -69,6 +69,8 @@ df = df[
 ]
 
 region_flat = (build_bbox_mask(metadata) if USE_BBOX else np.ones(grid_shape, dtype=bool)).flatten()
+# depth >= 10 m only: shallow pixels belong to neither the upwelling nor the non-upwelling group
+region_flat &= deep_mask(metadata["bathymetry"]).flatten()
 
 
 def _is_missing_grid(g):

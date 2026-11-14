@@ -375,10 +375,15 @@ def corr_md(L, C):
                          f"| {x['spearman']:.3f} | {dcol[0]} | {dcol[1]} |")
 
 
-def main():
+def main(out_dir=c.OUT_DIR, extra_zones=None, write_markdown=True):
+    """extra_zones: {name: {(y, m): zone grid}} appended to METHODS (used by rerun_10m for comparisons)."""
+    global METHODS
     stacks, meta = c.load_stacks()
     zones = {m: c.load_zones(m)[0] for m in METHODS}
-    out = {"setup": __doc__.split("\n\n")[1].replace("\n", " "), "bins": NB, "bootstrap_B": B}
+    if extra_zones:
+        zones.update(extra_zones)
+        METHODS = METHODS + [k for k in extra_zones if k not in METHODS]
+    out ={"setup": __doc__.split("\n\n")[1].replace("\n", " "), "bins": NB, "bootstrap_B": B}
 
     # 1. -1 sigma shares
     deep = c.deep_mask(meta)
@@ -418,9 +423,14 @@ def main():
     out["corr_a412_chl"] = {m: {s: corr_scope(pair, m, ks) for s, ks in scopes.items()} for m in METHODS}
     out["corr_a412_clip"] = {"threshold": A412_CLIP, "n_dropped_all_pixels": n_clipped["all"],
                              "n_dropped_deep_pixels": n_clipped["deep"]}
-    json.dump(out, open(c.OUT_DIR / "paper_stats.json", "w"), indent=1, default=float)
+    for m in extra_zones or {}:
+        out[f"violins_{m}_pooled"] = violin_tables(H, edges, m)
+    if not write_markdown:
+        return out
+    json.dump(out, open(out_dir / "paper_stats.json", "w"), indent=1, default=float)
     write_md(out)
     print("paper_stats done", flush=True)
+    return out
 
 
 def write_md(o):
