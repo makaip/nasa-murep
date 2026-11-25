@@ -19,6 +19,7 @@ Usage: .venv\\Scripts\\python.exe yucatan\\experiments\\rerun_10m\\figures_10m.p
 """
 
 import json
+import os
 import sys
 import warnings
 from concurrent.futures import ProcessPoolExecutor
@@ -46,8 +47,10 @@ warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=UserWarning)
 import bayth_classification as bc  # noqa: E402
 
-OUT = c.YUCATAN_DIR / "outputs" / "rerun_10m" / "figs"
+OUT = Path(os.environ.get("YUC_FIGS_OUT", c.YUCATAN_DIR / "outputs" / "rerun_10m" / "figs"))
 OUT.mkdir(parents=True, exist_ok=True)
+LOGS = Path(os.environ.get("YUC_LOGS_OUT", OUT.parent / "logs"))
+LOGS.mkdir(parents=True, exist_ok=True)
 DPI = 300
 VIOLIN_MAX = 200_000
 SCATTER_MAX = 50_000
@@ -463,7 +466,7 @@ def per_year_and_pooled(years_for_s=True):
     with ProcessPoolExecutor(max_workers=10) as ex:
         res = {y: (vd, scat, season) for y, vd, scat, season in ex.map(_year_job, c.YEARS)}
     lim = limits_from(r[0] for r in res.values())
-    json.dump({k: [float(a), float(b)] for k, (a, b) in lim.items()}, open(OUT.parent / "logs" / "violin_limits_if.json", "w"))
+    json.dump({k: [float(a), float(b)] for k, (a, b) in lim.items()}, open(LOGS / "violin_limits_if.json", "w"))
     # Figs 13-16: 2018 IF violins
     for j, k in enumerate(VAR_ORDER):
         single_violin_figure(res[2018][0][k], lim[k], VARS[k][1], IF_LABELS, OUT / f"fig{13 + j}.png")
@@ -510,7 +513,7 @@ def main(which):
         if isinstance(r, dict):
             info.update(r)
     if info:
-        p = OUT.parent / "logs" / "figures_info.json"
+        p = LOGS / "figures_info.json"
         old = json.load(open(p)) if p.exists() else {}
         old.update(info)
         json.dump(old, open(p, "w"), indent=1)

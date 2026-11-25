@@ -21,6 +21,7 @@ PERCENTILE_UPWELLING = 90
 SST_ANOM_Z_MAX = -0.5
 SSL_ANOM_Z_MAX = 1.0
 BAYTH_THRESHOLD = depth_cutoff.BATHY_THRESHOLD   # -10.0 m
+GATES_DEEP_ONLY = True   # False reproduces the pre-2026-11-24 zones (gates over all valid pixels)
 
 
 def _is_missing_day(value):
@@ -103,11 +104,17 @@ def _classify(anomalies, preprocess, iforest, features, bathymetry):
     scores = -iforest.decision_function(preprocess.transform(raw[features]))
     score_grid = np.full(anomalies["sst"].shape, np.nan)
     score_grid[valid] = scores
-    threshold = np.percentile(scores, PERCENTILE_UPWELLING)
-    sst_z = _zscore(anomalies["sst"], valid)
-    ssl_z = _zscore(anomalies["ssl"], valid)
     deep = ~np.isnan(bathymetry) & (bathymetry <= BAYTH_THRESHOLD)
-    upwelling = valid & (score_grid >= threshold) & (sst_z < SST_ANOM_Z_MAX) & (ssl_z < SSL_ANOM_Z_MAX) & deep
+    # Gates (90th-pct score threshold, SST/SSL z-scores) are computed over the pixels that can enter
+    # either group: deep (>= 10 m) valid pixels when GATES_DEEP_ONLY (depth10-everywhere, 2026-11-24);
+    # before that they were computed over all valid pixels incl. < 10 m water.
+    gate = valid & deep if GATES_DEEP_ONLY else valid
+    if not gate.any():
+        return None, None
+    threshold = np.percentile(score_grid[gate], PERCENTILE_UPWELLING)
+    sst_z = _zscore(anomalies["sst"], gate)
+    ssl_z = _zscore(anomalies["ssl"], gate)
+    upwelling = gate & (score_grid >= threshold) & (sst_z < SST_ANOM_Z_MAX) & (ssl_z < SSL_ANOM_Z_MAX) & deep
     class_grid = np.full(score_grid.shape, np.nan)
     class_grid[valid] = -1
     class_grid[upwelling] = 1
