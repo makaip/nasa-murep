@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 import pickle
@@ -8,7 +10,8 @@ from pathlib import Path
 # Absolute paths - update these if your environment differs
 # ----------------------------------------------------------------------------
 DATA_PATH = r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
-FIGS_ROOT = Path(__file__).resolve().parents[3] / "figs" / "scatterplots"
+# YUC_FIGS_ROOT redirects output (default yucatan/figs)
+FIGS_ROOT = Path(os.environ.get("YUC_FIGS_ROOT", Path(__file__).resolve().parents[3] / "figs")) / "scatterplots"
 
 # Upwelling zone bounding box (Yucatan shelf)
 UPWELLING_LON_MIN, UPWELLING_LON_MAX = -92.20216, -85.61256

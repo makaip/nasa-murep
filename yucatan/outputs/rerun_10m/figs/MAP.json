@@ -1,547 +1,1800 @@
 {
  "bayth/2010_IF_anom.png": {
   "paper": "Fig. S7",
-  "from": "S07.png",
-  "original_tree": false
+  "what": "2010: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2010_IF_class.png": {
   "paper": "Fig. S6",
-  "from": "S06.png",
-  "original_tree": true
+  "what": "2010: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2011_IF_anom.png": {
   "paper": "Fig. S15",
-  "from": "S15.png",
-  "original_tree": false
+  "what": "2011: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2011_IF_class.png": {
   "paper": "Fig. S14",
-  "from": "S14.png",
-  "original_tree": true
+  "what": "2011: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2012_IF_anom.png": {
   "paper": "Fig. S23",
-  "from": "S23.png",
-  "original_tree": false
+  "what": "2012: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2012_IF_class.png": {
   "paper": "Fig. S22",
-  "from": "S22.png",
-  "original_tree": true
+  "what": "2012: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2013_IF_anom.png": {
   "paper": "Fig. S31",
-  "from": "S31.png",
-  "original_tree": false
+  "what": "2013: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2013_IF_class.png": {
   "paper": "Fig. S30",
-  "from": "S30.png",
-  "original_tree": true
+  "what": "2013: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2014_IF_anom.png": {
   "paper": "Fig. S39",
-  "from": "S39.png",
-  "original_tree": false
+  "what": "2014: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2014_IF_class.png": {
   "paper": "Fig. S38",
-  "from": "S38.png",
-  "original_tree": true
+  "what": "2014: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2015_IF_anom.png": {
   "paper": "Fig. S47",
-  "from": "S47.png",
-  "original_tree": false
+  "what": "2015: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2015_IF_class.png": {
   "paper": "Fig. S46",
-  "from": "S46.png",
-  "original_tree": true
+  "what": "2015: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2016_IF_anom.png": {
   "paper": "Fig. S55",
-  "from": "S55.png",
-  "original_tree": false
+  "what": "2016: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2016_IF_class.png": {
   "paper": "Fig. S54",
-  "from": "S54.png",
-  "original_tree": true
+  "what": "2016: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2017_IF_anom.png": {
   "paper": "Fig. S63",
-  "from": "S63.png",
-  "original_tree": false
+  "what": "2017: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2017_IF_class.png": {
   "paper": "Fig. S62",
-  "from": "S62.png",
-  "original_tree": true
+  "what": "2017: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2018_IF_anom.png": {
   "paper": "Fig. S71 / Fig. 9",
-  "from": "S71.png",
-  "original_tree": false
+  "what": "2018: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2018_IF_class.png": {
   "paper": "Fig. S70 / Fig. 8",
-  "from": "S70.png",
-  "original_tree": true
+  "what": "2018: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/2019_IF_anom.png": {
   "paper": "Fig. S79",
-  "from": "S79.png",
-  "original_tree": false
+  "what": "2019: IF anomaly score map (no legend / outline)",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": false
  },
  "bayth/2019_IF_class.png": {
   "paper": "Fig. S78",
-  "from": "S78.png",
-  "original_tree": true
+  "what": "2019: IF class map",
+  "generator": "visualization/yearly_class/IF_bayth_all_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "bayth/climatology_IF_class.png": {
   "paper": "Fig. 10",
-  "from": "fig10.png",
-  "original_tree": true
- },
- "histograms/sst_weekly_climatology_sigma.png": {
-  "paper": "Fig. 6",
-  "from": "fig06.png",
-  "original_tree": false
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2010.png": {
-  "paper": "Fig. S12",
-  "from": "S12.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2011.png": {
-  "paper": "Fig. S20",
-  "from": "S20.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2012.png": {
-  "paper": "Fig. S28",
-  "from": "S28.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2013.png": {
-  "paper": "Fig. S36",
-  "from": "S36.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2014.png": {
-  "paper": "Fig. S44",
-  "from": "S44.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2015.png": {
-  "paper": "Fig. S52",
-  "from": "S52.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2016.png": {
-  "paper": "Fig. S60",
-  "from": "S60.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2017.png": {
-  "paper": "Fig. S68",
-  "from": "S68.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2018.png": {
-  "paper": "Fig. S76",
-  "from": "S76.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2019.png": {
-  "paper": "Fig. S84",
-  "from": "S84.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_all_seasons.png": {
-  "paper": "Fig. 20",
-  "from": "fig20.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_nonupwelling_months.png": {
-  "paper": "Fig. 19",
-  "from": "fig19.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_upwelling_months.png": {
-  "paper": "Fig. 18",
-  "from": "fig18.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_may_2018.png": {
-  "paper": "Fig. 17",
-  "from": "fig17.png",
-  "original_tree": false
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2010.png": {
-  "paper": "Fig. S13",
-  "from": "S13.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2011.png": {
-  "paper": "Fig. S21",
-  "from": "S21.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2012.png": {
-  "paper": "Fig. S29",
-  "from": "S29.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2013.png": {
-  "paper": "Fig. S37",
-  "from": "S37.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2014.png": {
-  "paper": "Fig. S45",
-  "from": "S45.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2015.png": {
-  "paper": "Fig. S53",
-  "from": "S53.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2016.png": {
-  "paper": "Fig. S61",
-  "from": "S61.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2017.png": {
-  "paper": "Fig. S69",
-  "from": "S69.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2018.png": {
-  "paper": "Fig. S77",
-  "from": "S77.png",
-  "original_tree": true
- },
- "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2019.png": {
-  "paper": "Fig. S85",
-  "from": "S85.png",
-  "original_tree": true
- },
- "sigma/2018_sigma_class.png": {
-  "paper": "Fig. 7",
-  "from": "fig07.png",
-  "original_tree": false
- },
- "sigma/violins_cdom_412_by_year.png": {
-  "paper": "Fig. S2",
-  "from": "S02.png",
-  "original_tree": false
- },
- "sigma/violins_cdom_slope_275_295_by_year.png": {
-  "paper": "Fig. S3",
-  "from": "S03.png",
-  "original_tree": false
- },
- "sigma/violins_cdom_slope_300_600_by_year.png": {
-  "paper": "Fig. S4",
-  "from": "S04.png",
-  "original_tree": false
- },
- "sigma/violins_log10_chlorophyll_by_year.png": {
-  "paper": "Fig. S5",
-  "from": "S05.png",
-  "original_tree": false
- },
- "sigma/violins_pooled_2010_2019.png": {
-  "paper": "Fig. 12",
-  "from": "fig12.png",
-  "original_tree": false
- },
- "violins/CDOM_S275_295_2010.png": {
-  "paper": "Fig. S9",
-  "from": "S09.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2011.png": {
-  "paper": "Fig. S17",
-  "from": "S17.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2012.png": {
-  "paper": "Fig. S25",
-  "from": "S25.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2013.png": {
-  "paper": "Fig. S33",
-  "from": "S33.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2014.png": {
-  "paper": "Fig. S41",
-  "from": "S41.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2015.png": {
-  "paper": "Fig. S49",
-  "from": "S49.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2016.png": {
-  "paper": "Fig. S57",
-  "from": "S57.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2017.png": {
-  "paper": "Fig. S65",
-  "from": "S65.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2018.png": {
-  "paper": "Fig. S73",
-  "from": "S73.png",
-  "original_tree": true
- },
- "violins/CDOM_S275_295_2018_paper.png": {
-  "paper": "Fig. 14",
-  "from": "fig14.png",
-  "original_tree": false
- },
- "violins/CDOM_S275_295_2019.png": {
-  "paper": "Fig. S81",
-  "from": "S81.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2010.png": {
-  "paper": "Fig. S10",
-  "from": "S10.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2011.png": {
-  "paper": "Fig. S18",
-  "from": "S18.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2012.png": {
-  "paper": "Fig. S26",
-  "from": "S26.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2013.png": {
-  "paper": "Fig. S34",
-  "from": "S34.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2014.png": {
-  "paper": "Fig. S42",
-  "from": "S42.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2015.png": {
-  "paper": "Fig. S50",
-  "from": "S50.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2016.png": {
-  "paper": "Fig. S58",
-  "from": "S58.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2017.png": {
-  "paper": "Fig. S66",
-  "from": "S66.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2018.png": {
-  "paper": "Fig. S74",
-  "from": "S74.png",
-  "original_tree": true
- },
- "violins/CDOM_S300_600_2018_paper.png": {
-  "paper": "Fig. 15",
-  "from": "fig15.png",
-  "original_tree": false
- },
- "violins/CDOM_S300_600_2019.png": {
-  "paper": "Fig. S82",
-  "from": "S82.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2010.png": {
-  "paper": "Fig. S8",
-  "from": "S08.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2011.png": {
-  "paper": "Fig. S16",
-  "from": "S16.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2012.png": {
-  "paper": "Fig. S24",
-  "from": "S24.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2013.png": {
-  "paper": "Fig. S32",
-  "from": "S32.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2014.png": {
-  "paper": "Fig. S40",
-  "from": "S40.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2015.png": {
-  "paper": "Fig. S48",
-  "from": "S48.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2016.png": {
-  "paper": "Fig. S56",
-  "from": "S56.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2017.png": {
-  "paper": "Fig. S64",
-  "from": "S64.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2018.png": {
-  "paper": "Fig. S72",
-  "from": "S72.png",
-  "original_tree": true
- },
- "violins/CDOM_a(412)_2018_paper.png": {
-  "paper": "Fig. 13",
-  "from": "fig13.png",
-  "original_tree": false
- },
- "violins/CDOM_a(412)_2019.png": {
-  "paper": "Fig. S80",
-  "from": "S80.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2010.png": {
-  "paper": "Fig. S11",
-  "from": "S11.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2011.png": {
-  "paper": "Fig. S19",
-  "from": "S19.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2012.png": {
-  "paper": "Fig. S27",
-  "from": "S27.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2013.png": {
-  "paper": "Fig. S35",
-  "from": "S35.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2014.png": {
-  "paper": "Fig. S43",
-  "from": "S43.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2015.png": {
-  "paper": "Fig. S51",
-  "from": "S51.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2016.png": {
-  "paper": "Fig. S59",
-  "from": "S59.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2017.png": {
-  "paper": "Fig. S67",
-  "from": "S67.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2018.png": {
-  "paper": "Fig. S75",
-  "from": "S75.png",
-  "original_tree": true
- },
- "violins/Log10_Chlorophyll_2018_paper.png": {
-  "paper": "Fig. 16",
-  "from": "fig16.png",
-  "original_tree": false
- },
- "violins/Log10_Chlorophyll_2019.png": {
-  "paper": "Fig. S83",
-  "from": "S83.png",
-  "original_tree": true
- },
- "raw/cdom_412.png": {
-  "paper": null,
-  "from": "visualization/raw/ (YUC_DEPTH10=1)",
-  "original_tree": true
- },
- "raw/cdom_slope_275_295.png": {
-  "paper": null,
-  "from": "visualization/raw/ (YUC_DEPTH10=1)",
-  "original_tree": true
- },
- "raw/cdom_slope_300_600.png": {
-  "paper": null,
-  "from": "visualization/raw/ (YUC_DEPTH10=1)",
-  "original_tree": true
- },
- "raw/log_chlor.png": {
-  "paper": null,
-  "from": "visualization/raw/ (YUC_DEPTH10=1)",
-  "original_tree": true
- },
- "raw/ssl.png": {
-  "paper": null,
-  "from": "visualization/raw/ (YUC_DEPTH10=1)",
-  "original_tree": true
- },
- "raw/sst.png": {
-  "paper": null,
-  "from": "visualization/raw/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "IF class, 2010-2019 climatology",
+  "generator": "visualization/yearly_class/IF_bayth_across_years.py",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
  },
  "histograms/cdom_412.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   800,
+   600
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   800,
+   600
+  ]
  },
  "histograms/cdom_slope_275_295.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   800,
+   600
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   800,
+   600
+  ]
  },
  "histograms/cdom_slope_300_600.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   800,
+   600
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   800,
+   600
+  ]
  },
  "histograms/chlorophyll.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   800,
+   600
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   800,
+   600
+  ]
  },
  "histograms/ssl.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   800,
+   600
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   800,
+   600
+  ]
  },
  "histograms/sst.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   800,
+   600
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   800,
+   600
+  ]
  },
  "histograms/sst_chlorophyll_cdom_412_cdom_slope_275_295_cdom_slope_300_600_ssl.png": {
   "paper": null,
-  "from": "visualization/histograms/ (YUC_DEPTH10=1)",
-  "original_tree": true
+  "what": "histograms/ figure, < 10 m pixels dropped",
+  "generator": "visualization/histograms/ (YUC_DEPTH10=1)",
+  "size": [
+   1600,
+   1800
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   1600,
+   1800
+  ]
+ },
+ "histograms/sst_weekly_climatology_sigma.png": {
+  "paper": "Fig. 6",
+  "what": "Weekly SST climatology histogram, -1 sigma bins",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   3000,
+   1800
+  ],
+  "in_original_tree": false
+ },
+ "raw/cdom_412.png": {
+  "paper": null,
+  "what": "raw/ figure, < 10 m pixels dropped",
+  "generator": "visualization/raw/ (YUC_DEPTH10=1)",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
+ },
+ "raw/cdom_slope_275_295.png": {
+  "paper": null,
+  "what": "raw/ figure, < 10 m pixels dropped",
+  "generator": "visualization/raw/ (YUC_DEPTH10=1)",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
+ },
+ "raw/cdom_slope_300_600.png": {
+  "paper": null,
+  "what": "raw/ figure, < 10 m pixels dropped",
+  "generator": "visualization/raw/ (YUC_DEPTH10=1)",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
+ },
+ "raw/log_chlor.png": {
+  "paper": null,
+  "what": "raw/ figure, < 10 m pixels dropped",
+  "generator": "visualization/raw/ (YUC_DEPTH10=1)",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
+ },
+ "raw/ssl.png": {
+  "paper": null,
+  "what": "raw/ figure, < 10 m pixels dropped",
+  "generator": "visualization/raw/ (YUC_DEPTH10=1)",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
+ },
+ "raw/sst.png": {
+  "paper": null,
+  "what": "raw/ figure, < 10 m pixels dropped",
+  "generator": "visualization/raw/ (YUC_DEPTH10=1)",
+  "size": [
+   11200,
+   4000
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   11200,
+   4000
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2010.png": {
+  "paper": "Fig. S12",
+  "what": "2010: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2011.png": {
+  "paper": "Fig. S20",
+  "what": "2011: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2012.png": {
+  "paper": "Fig. S28",
+  "what": "2012: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2013.png": {
+  "paper": "Fig. S36",
+  "what": "2013: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2014.png": {
+  "paper": "Fig. S44",
+  "what": "2014: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2015.png": {
+  "paper": "Fig. S52",
+  "what": "2015: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2016.png": {
+  "paper": "Fig. S60",
+  "what": "2016: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2017.png": {
+  "paper": "Fig. S68",
+  "what": "2017: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2018.png": {
+  "paper": "Fig. S76",
+  "what": "2018: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2019.png": {
+  "paper": "Fig. S84",
+  "what": "2019: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels",
+  "generator": "visualization/scatterplots/monthly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_all_seasons.png": {
+  "paper": "Fig. 20",
+  "what": "Chl vs a_CDOM(412), all months 2010-2019, inside vs outside IF class",
+  "generator": "visualization/scatterplots/pooled.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_nonupwelling_months.png": {
+  "paper": "Fig. 19",
+  "what": "Chl vs a_CDOM(412), Oct-Apr 2010-2019, inside vs outside IF class",
+  "generator": "visualization/scatterplots/pooled.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_upwelling_months.png": {
+  "paper": "Fig. 18",
+  "what": "Chl vs a_CDOM(412), May-Sep 2010-2019, inside vs outside IF class",
+  "generator": "visualization/scatterplots/pooled.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_may_2018.png": {
+  "paper": "Fig. 17",
+  "what": "Chl vs a_CDOM(412), May 2018, inside vs outside",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": false
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2010.png": {
+  "paper": "Fig. S13",
+  "what": "2010: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2011.png": {
+  "paper": "Fig. S21",
+  "what": "2011: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2012.png": {
+  "paper": "Fig. S29",
+  "what": "2012: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2013.png": {
+  "paper": "Fig. S37",
+  "what": "2013: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2014.png": {
+  "paper": "Fig. S45",
+  "what": "2014: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2015.png": {
+  "paper": "Fig. S53",
+  "what": "2015: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2016.png": {
+  "paper": "Fig. S61",
+  "what": "2016: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2017.png": {
+  "paper": "Fig. S69",
+  "what": "2017: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2018.png": {
+  "paper": "Fig. S77",
+  "what": "2018: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2019.png": {
+  "paper": "Fig. S85",
+  "what": "2019: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class",
+  "generator": "visualization/scatterplots/yearly.py",
+  "size": [
+   2964,
+   1137
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   2964,
+   1137
+  ]
+ },
+ "sigma/2018_sigma_class.png": {
+  "paper": "Fig. 7",
+  "what": "-1 sigma class maps, 2018",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   8400,
+   3000
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2010.png": {
+  "paper": "Fig. S3 (2010 panel)",
+  "what": "2010: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2011.png": {
+  "paper": "Fig. S3 (2011 panel)",
+  "what": "2011: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2012.png": {
+  "paper": "Fig. S3 (2012 panel)",
+  "what": "2012: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2013.png": {
+  "paper": "Fig. S3 (2013 panel)",
+  "what": "2013: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2014.png": {
+  "paper": "Fig. S3 (2014 panel)",
+  "what": "2014: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2015.png": {
+  "paper": "Fig. S3 (2015 panel)",
+  "what": "2015: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2016.png": {
+  "paper": "Fig. S3 (2016 panel)",
+  "what": "2016: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2017.png": {
+  "paper": "Fig. S3 (2017 panel)",
+  "what": "2017: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2018.png": {
+  "paper": "Fig. S3 (2018 panel)",
+  "what": "2018: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S275_295_2019.png": {
+  "paper": "Fig. S3 (2019 panel)",
+  "what": "2019: -1 sigma violins S275-295",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2010.png": {
+  "paper": "Fig. S4 (2010 panel)",
+  "what": "2010: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2011.png": {
+  "paper": "Fig. S4 (2011 panel)",
+  "what": "2011: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2012.png": {
+  "paper": "Fig. S4 (2012 panel)",
+  "what": "2012: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2013.png": {
+  "paper": "Fig. S4 (2013 panel)",
+  "what": "2013: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2014.png": {
+  "paper": "Fig. S4 (2014 panel)",
+  "what": "2014: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2015.png": {
+  "paper": "Fig. S4 (2015 panel)",
+  "what": "2015: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2016.png": {
+  "paper": "Fig. S4 (2016 panel)",
+  "what": "2016: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2017.png": {
+  "paper": "Fig. S4 (2017 panel)",
+  "what": "2017: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2018.png": {
+  "paper": "Fig. S4 (2018 panel)",
+  "what": "2018: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_S300_600_2019.png": {
+  "paper": "Fig. S4 (2019 panel)",
+  "what": "2019: -1 sigma violins S300-600",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2010.png": {
+  "paper": "Fig. S2 (2010 panel)",
+  "what": "2010: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2011.png": {
+  "paper": "Fig. S2 (2011 panel)",
+  "what": "2011: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2012.png": {
+  "paper": "Fig. S2 (2012 panel)",
+  "what": "2012: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2013.png": {
+  "paper": "Fig. S2 (2013 panel)",
+  "what": "2013: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2014.png": {
+  "paper": "Fig. S2 (2014 panel)",
+  "what": "2014: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2015.png": {
+  "paper": "Fig. S2 (2015 panel)",
+  "what": "2015: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2016.png": {
+  "paper": "Fig. S2 (2016 panel)",
+  "what": "2016: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2017.png": {
+  "paper": "Fig. S2 (2017 panel)",
+  "what": "2017: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2018.png": {
+  "paper": "Fig. S2 (2018 panel)",
+  "what": "2018: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/CDOM_a(412)_2019.png": {
+  "paper": "Fig. S2 (2019 panel)",
+  "what": "2019: -1 sigma violins a_CDOM(412)",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2010.png": {
+  "paper": "Fig. S5 (2010 panel)",
+  "what": "2010: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2011.png": {
+  "paper": "Fig. S5 (2011 panel)",
+  "what": "2011: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2012.png": {
+  "paper": "Fig. S5 (2012 panel)",
+  "what": "2012: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2013.png": {
+  "paper": "Fig. S5 (2013 panel)",
+  "what": "2013: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2014.png": {
+  "paper": "Fig. S5 (2014 panel)",
+  "what": "2014: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2015.png": {
+  "paper": "Fig. S5 (2015 panel)",
+  "what": "2015: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2016.png": {
+  "paper": "Fig. S5 (2016 panel)",
+  "what": "2016: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2017.png": {
+  "paper": "Fig. S5 (2017 panel)",
+  "what": "2017: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2018.png": {
+  "paper": "Fig. S5 (2018 panel)",
+  "what": "2018: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/Log10_Chlorophyll_2019.png": {
+  "paper": "Fig. S5 (2019 panel)",
+  "what": "2019: -1 sigma violins log10 Chl-a",
+  "generator": "YUC_ZONES=sigma visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "sigma/violins_pooled_2010_2019.png": {
+  "paper": "Fig. 12",
+  "what": "-1 sigma violins pooled 2010-2019",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   4755,
+   5964
+  ],
+  "in_original_tree": false
+ },
+ "violins/CDOM_S275_295_2010.png": {
+  "paper": "Fig. S9",
+  "what": "2010: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2011.png": {
+  "paper": "Fig. S17",
+  "what": "2011: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2012.png": {
+  "paper": "Fig. S25",
+  "what": "2012: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2013.png": {
+  "paper": "Fig. S33",
+  "what": "2013: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2014.png": {
+  "paper": "Fig. S41",
+  "what": "2014: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2015.png": {
+  "paper": "Fig. S49",
+  "what": "2015: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2016.png": {
+  "paper": "Fig. S57",
+  "what": "2016: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2017.png": {
+  "paper": "Fig. S65",
+  "what": "2017: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2018.png": {
+  "paper": "Fig. S73",
+  "what": "2018: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S275_295_2018_paper.png": {
+  "paper": "Fig. 14",
+  "what": "IF violins 2018 S275-295",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": false
+ },
+ "violins/CDOM_S275_295_2019.png": {
+  "paper": "Fig. S81",
+  "what": "2019: IF violins S275-295",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1769
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1769
+  ]
+ },
+ "violins/CDOM_S300_600_2010.png": {
+  "paper": "Fig. S10",
+  "what": "2010: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2011.png": {
+  "paper": "Fig. S18",
+  "what": "2011: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2012.png": {
+  "paper": "Fig. S26",
+  "what": "2012: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2013.png": {
+  "paper": "Fig. S34",
+  "what": "2013: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2014.png": {
+  "paper": "Fig. S42",
+  "what": "2014: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2015.png": {
+  "paper": "Fig. S50",
+  "what": "2015: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2016.png": {
+  "paper": "Fig. S58",
+  "what": "2016: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2017.png": {
+  "paper": "Fig. S66",
+  "what": "2017: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2018.png": {
+  "paper": "Fig. S74",
+  "what": "2018: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_S300_600_2018_paper.png": {
+  "paper": "Fig. 15",
+  "what": "IF violins 2018 S300-600",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "violins/CDOM_S300_600_2019.png": {
+  "paper": "Fig. S82",
+  "what": "2019: IF violins S300-600",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2010.png": {
+  "paper": "Fig. S8",
+  "what": "2010: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2011.png": {
+  "paper": "Fig. S16",
+  "what": "2011: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2012.png": {
+  "paper": "Fig. S24",
+  "what": "2012: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2013.png": {
+  "paper": "Fig. S32",
+  "what": "2013: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2014.png": {
+  "paper": "Fig. S40",
+  "what": "2014: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2015.png": {
+  "paper": "Fig. S48",
+  "what": "2015: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2016.png": {
+  "paper": "Fig. S56",
+  "what": "2016: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2017.png": {
+  "paper": "Fig. S64",
+  "what": "2017: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2018.png": {
+  "paper": "Fig. S72",
+  "what": "2018: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/CDOM_a(412)_2018_paper.png": {
+  "paper": "Fig. 13",
+  "what": "IF violins 2018 a_CDOM(412)",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "violins/CDOM_a(412)_2019.png": {
+  "paper": "Fig. S80",
+  "what": "2019: IF violins a_CDOM(412)",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4755,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4755,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2010.png": {
+  "paper": "Fig. S11",
+  "what": "2010: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2011.png": {
+  "paper": "Fig. S19",
+  "what": "2011: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2012.png": {
+  "paper": "Fig. S27",
+  "what": "2012: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2013.png": {
+  "paper": "Fig. S35",
+  "what": "2013: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2014.png": {
+  "paper": "Fig. S43",
+  "what": "2014: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2015.png": {
+  "paper": "Fig. S51",
+  "what": "2015: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2016.png": {
+  "paper": "Fig. S59",
+  "what": "2016: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2017.png": {
+  "paper": "Fig. S67",
+  "what": "2017: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2018.png": {
+  "paper": "Fig. S75",
+  "what": "2018: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
+ },
+ "violins/Log10_Chlorophyll_2018_paper.png": {
+  "paper": "Fig. 16",
+  "what": "IF violins 2018 log10 Chl-a",
+  "generator": "rerun_10m/figures_10m.py (paper style, extra)",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": false
+ },
+ "violins/Log10_Chlorophyll_2019.png": {
+  "paper": "Fig. S83",
+  "what": "2019: IF violins log10 Chl-a",
+  "generator": "visualization/violins/all_years.py",
+  "size": [
+   4756,
+   1770
+  ],
+  "in_original_tree": true,
+  "original_size": [
+   4756,
+   1770
+  ]
  }
 }

@@ -1,0 +1,134 @@
+== yearly_class/IF_bayth_all_years.py
+  File "F:\Programming\GitHub\nasa-murep\yucatan\experiments\visualization\yearly_class\IF_bayth_all_years.py", line 78
+    ax.set_title(f"{MONTH_NAMES[month - 1]}
+                 ^
+SyntaxError: unterminated f-string literal (detected at line 78)
+FAIL yearly_class/IF_bayth_all_years.py
+== yearly_class/IF_bayth_across_years.py
+== violins/all_years.py
+F:\Programming\GitHub\nasa-murep\yucatan\experiments\visualization\violins\all_years.py:196: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  fig, ax = plt.subplots(figsize=(16, 6))
+Data loaded successfully.
+
+============================================================
+Extracting Year: 2010
+============================================================
+
+============================================================
+Extracting Year: 2011
+============================================================
+
+============================================================
+Extracting Year: 2012
+============================================================
+
+============================================================
+Extracting Year: 2013
+============================================================
+
+============================================================
+Extracting Year: 2014
+============================================================
+
+============================================================
+Extracting Year: 2015
+============================================================
+
+============================================================
+Extracting Year: 2016
+============================================================
+
+============================================================
+Extracting Year: 2017
+============================================================
+
+============================================================
+Extracting Year: 2018
+============================================================
+
+============================================================
+Extracting Year: 2019
+============================================================
+Global limits computed:
+S275: (np.float64(0.01295394147746265), np.float64(0.061381325125694275))
+S300: (np.float64(0.014658027701079846), np.float64(0.03299326449632645))
+a412: (np.float64(7.3253249865956604e-06), np.float64(0.5917820930480957))
+Chlor: (np.float64(-2.236068409828751), np.float64(1.5428116809216035))
+Generating plots for 2010...
+Generating plots for 2011...
+Generating plots for 2012...
+Generating plots for 2013...
+Generating plots for 2014...
+Generating plots for 2015...
+Generating plots for 2016...
+Generating plots for 2017...
+Generating plots for 2018...
+Generating plots for 2019...
+Saved 40 figures to figs/ directory.
+== scatterplots/monthly.py
+Total points processed: 55878424
+== scatterplots/yearly.py
+Total points processed: 55878424
+== scatterplots/pooled.py
+Total points processed: 55878424
+== sigma violins
+F:\Programming\GitHub\nasa-murep\yucatan\experiments\visualization\violins\all_years.py:196: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  fig, ax = plt.subplots(figsize=(16, 6))
+Data loaded successfully.
+
+============================================================
+Extracting Year: 2010
+============================================================
+
+============================================================
+Extracting Year: 2011
+============================================================
+
+============================================================
+Extracting Year: 2012
+============================================================
+
+============================================================
+Extracting Year: 2013
+============================================================
+
+============================================================
+Extracting Year: 2014
+============================================================
+
+============================================================
+Extracting Year: 2015
+============================================================
+
+============================================================
+Extracting Year: 2016
+============================================================
+
+============================================================
+Extracting Year: 2017
+============================================================
+
+============================================================
+Extracting Year: 2018
+============================================================
+
+============================================================
+Extracting Year: 2019
+============================================================
+Global limits computed:
+S275: (np.float64(0.013357140123844147), np.float64(0.06184717267751694))
+S300: (np.float64(0.015095605980604887), np.float64(0.03311600163578987))
+a412: (np.float64(7.3253249865956604e-06), np.float64(0.4622187614440918))
+Chlor: (np.float64(-2.236068409828751), np.float64(1.3865530584338759))
+Generating plots for 2010...
+Generating plots for 2011...
+Generating plots for 2012...
+Generating plots for 2013...
+Generating plots for 2014...
+Generating plots for 2015...
+Generating plots for 2016...
+Generating plots for 2017...
+Generating plots for 2018...
+Generating plots for 2019...
+Saved 40 figures to figs/ directory.
+NOTE: IF_bayth_all_years.py failed above on a typo; fixed and rerun separately with the same env (bayth/ class + anom maps).

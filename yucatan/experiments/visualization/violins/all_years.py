@@ -16,7 +16,15 @@ from plot_style import apply_nice_yaxis
 # Paths / params (identical to the IF scatterplot script)
 # ----------------------------------------------------------------------------
 DATA_PATH = r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl"
-PRECLASSIFIED = load_preclassified(PICKLE_PATH)
+# YUC_ZONES=sigma: split by the -1 sigma SST zones (outputs/redo/cache/zones/sigma.npz, built by
+# redo/sigma.py) instead of the IF zones; figures then go to <figs root>/sigma/ with the same names.
+ZONES = os.environ.get('YUC_ZONES', 'iforest')
+if ZONES == 'sigma':
+    _z = np.load(Path(__file__).resolve().parents[3] / 'outputs' / 'redo' / 'cache' / 'zones' / 'sigma.npz')['by_month']
+    PRECLASSIFIED = {'by_year': {y: {m: {'classes': _z[(y - 2010) * 12 + m - 1]} for m in range(1, 13)}
+                                 for y in range(2010, 2020)}}
+else:
+    PRECLASSIFIED = load_preclassified(PICKLE_PATH)
 
 # Upwelling zone bounding box (Yucatan shelf)
 UPWELLING_LON_MIN, UPWELLING_LON_MAX = -92.20216, -85.61256
@@ -296,7 +304,8 @@ for yd in all_yearly_data:
         if res:
             all_figures.append(res)
 
-FIGS_DIR = Path(__file__).resolve().parents[3] / 'figs' / 'violins'
+# YUC_FIGS_ROOT redirects output (default yucatan/figs)
+FIGS_DIR = Path(os.environ.get('YUC_FIGS_ROOT', Path(__file__).resolve().parents[3] / 'figs')) / ('sigma' if ZONES == 'sigma' else 'violins')
 FIGS_DIR.mkdir(parents=True, exist_ok=True)
 for fig, name in all_figures:
     fig.savefig(FIGS_DIR / name, bbox_inches='tight', dpi=300)

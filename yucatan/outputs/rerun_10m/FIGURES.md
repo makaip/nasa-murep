@@ -1,6 +1,6 @@
 # Paper figures, 10 m depth cutoff in all cases (rerun 2026-11-13)
 
-> **2026-11-24 (branch depth10-everywhere):** `figs/` no longer holds the flat files listed below. It now holds the depth10-everywhere figures (10 m cut on both groups and on the IF gates) in the original `yucatan/figs/` layout (bayth/, violins/, scatterplots/..., raw/, histograms/, plus sigma/ and *_IF_anom.png extras). Map from each tree path to its paper figure: `figs/MAP.json`; paper-figure -> path table: `outputs/redo/paper_stats_depth10.md` section 8. The flat 11-13 files below are in git at commit b3fdb4b.
+> **2026-11-24 (branch depth10-everywhere):** `figs/` no longer holds the flat files listed below. It now holds the depth10-everywhere figures (10 m cut on both groups and on the IF gates) in the original `yucatan/figs/` layout (bayth/, violins/, scatterplots/..., raw/, histograms/, plus sigma/ and *_IF_anom.png extras). Redrawn 2026-11-25 with the ORIGINAL `experiments/visualization/` scripts (same names, sizes, style as `yucatan/figs/`; < 10 m water blank in class maps); sigma/ now has per-year violins named like violins/. Index: `experiments/rerun_10m/figs_tree.py`. Map from each tree path to its paper figure: `figs/MAP.json`; paper-figure -> path table: `outputs/redo/paper_stats_depth10.md` section 8. The flat 11-13 files below are in git at commit b3fdb4b.
 
 All files: `figs/`, PNG at 300 dpi. Generator: `yucatan/experiments/rerun_10m/figures_10m.py` (one script; run with the repo .venv, `figures_10m.py all`, ~40 min). Numbering follows the 11-10 draft's figure list.
 

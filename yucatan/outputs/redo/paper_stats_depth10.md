@@ -364,107 +364,157 @@ Pixels per cutoff: 5 m 42,977, 10 m 41,144, 20 m 38,099. OLD: score threshold an
 
 ## 8. Regenerated figures
 
-All redrawn on this branch from the NEW zones into `yucatan/outputs/redo/figs_depth10/` (flat paper names), then copied into `yucatan/outputs/rerun_10m/figs/` in the original `yucatan/figs/` layout and names (`experiments/rerun_10m/to_original_layout.py`; map in `figs/MAP.json`; raw/ and histograms/ redrawn with `YUC_DEPTH10=1`). The paths below are the new ones. (generator `yucatan/experiments/rerun_10m/figures_10m.py all`, 300 dpi). In every violin and scatter the outside group is (zone == 0) & depth >= 10 m; maps draw < 10 m water light gray and do not classify it. Last column: share of pixels that differ from the 11-13 rerun PNG (flat `outputs/rerun_10m/figs/*.png` at commit b3fdb4b, now replaced). For the scatters (Figs 17-20, S12/S13-type panels), most of the difference comes from the random 50,000-point subsample being redrawn. S12-type panels do not depend on the class at all and still differ by ~8-17%. The maps and violins change only slightly (<= 1.1% of pixels), and -1 sigma figures are pixel-identical.
+`yucatan/outputs/rerun_10m/figs/` mirrors `yucatan/figs/` (same folders, file names, image sizes and plotting code). Only the data differ: < 10 m pixels are in neither group, and the IF gates (90th-pct score, SST/SSL z) are computed over deep pixels (zones in `yucatan/figs/bayth_preclassified.pkl`). Class maps leave < 10 m water blank (white) instead of blue. Drawn by the original `experiments/visualization/` scripts with `YUC_FIGS_ROOT=yucatan/outputs/rerun_10m/figs YUC_DEPTH10=1`; index: `figs/MAP.json`; built by `experiments/rerun_10m/figs_tree.py`. Extras with no counterpart in `yucatan/figs/`: `bayth/*_IF_anom.png` (score maps in the class-map layout), `sigma/` (per-year -1 sigma violins drawn by the violin script with `YUC_ZONES=sigma`, named like `violins/`, plus Fig 7 and Fig 12) and the paper-style renders listed with generator `figures_10m.py`.
 
-| Paper figure | File | What | Changed vs 11-13 rerun figure |
+Files: 145 PNG (87 with an original counterpart, 58 extras). Original files missing here: 0. Size differences vs original: 0.
+
+
+| Paper figure | File (under `yucatan/outputs/rerun_10m/figs/`) | What | Generator |
 |---|---|---|---|
-| Fig. 6 | `yucatan/outputs/rerun_10m/figs/histograms/sst_weekly_climatology_sigma.png` | Weekly (week-of-year climatology, 2010-2019) SST histogram, deep pixels; bins <= weekly mean - 1 sd of deep pixels highlighted | identical |
-| Fig. 7 | `yucatan/outputs/rerun_10m/figs/sigma/2018_sigma_class.png` | -1 sigma monthly-rule binary maps, Jan-Dec 2018 | identical |
-| Fig. 8 | `yucatan/outputs/rerun_10m/figs/bayth/2018_IF_class.png` | IF class 2018 | 0.04% px |
-| Fig. 9 | `yucatan/outputs/rerun_10m/figs/bayth/2018_IF_anom.png` | IF anomaly score 2018 (copy of S71); cyan contour = class | 0.10% px |
-| Fig. 10 | `yucatan/outputs/rerun_10m/figs/bayth/climatology_IF_class.png` | IF class, 2010-2019 climatology | 0.07% px |
-| Fig. 12 | `yucatan/outputs/rerun_10m/figs/sigma/violins_pooled_2010_2019.png` | -1 sigma violins pooled 2010-2019 (a412, S275-295, S300-600, log10 Chl) | identical |
-| Fig. 13 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2018_paper.png` | IF violins 2018: a_CDOM(412) | 0.72% px |
-| Fig. 14 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2018_paper.png` | IF violins 2018: S275-295 | 0.86% px |
-| Fig. 15 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2018_paper.png` | IF violins 2018: S300-600 | 0.75% px |
-| Fig. 16 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2018_paper.png` | IF violins 2018: log10 Chl-a | 0.77% px |
-| Fig. 17 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_may_2018.png` | Chl vs a_CDOM(412), May 2018, inside vs outside IF class | 3.03% px |
-| Fig. 18 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_upwelling_months.png` | Chl vs a_CDOM(412), May-Sep 2010-2019, inside vs outside | 8.16% px |
-| Fig. 19 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_nonupwelling_months.png` | Chl vs a_CDOM(412), Oct-Apr 2010-2019, inside vs outside | 16.59% px |
-| Fig. 20 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_all_seasons.png` | Chl vs a_CDOM(412), all months 2010-2019, inside vs outside | 17.14% px |
-| Fig. S2 | `yucatan/outputs/rerun_10m/figs/sigma/violins_cdom_412_by_year.png` | -1 sigma violins by year (one panel per year 2010-2019): a_CDOM(412) | identical |
-| Fig. S3 | `yucatan/outputs/rerun_10m/figs/sigma/violins_cdom_slope_275_295_by_year.png` | same: S275-295 | identical |
-| Fig. S4 | `yucatan/outputs/rerun_10m/figs/sigma/violins_cdom_slope_300_600_by_year.png` | same: S300-600 | identical |
-| Fig. S5 | `yucatan/outputs/rerun_10m/figs/sigma/violins_log10_chlorophyll_by_year.png` | same: log10 Chl-a | identical |
-| Fig. S6 | `yucatan/outputs/rerun_10m/figs/bayth/2010_IF_class.png` | 2010: IF class map | 0.05% px |
-| Fig. S7 | `yucatan/outputs/rerun_10m/figs/bayth/2010_IF_anom.png` | 2010: IF anomaly score map (cyan contour = class) | 0.11% px |
-| Fig. S8 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2010.png` | 2010: IF violins a_CDOM(412) | 0.52% px |
-| Fig. S9 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2010.png` | 2010: IF violins S275-295 | 0.68% px |
-| Fig. S10 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2010.png` | 2010: IF violins S300-600 | 0.58% px |
-| Fig. S11 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2010.png` | 2010: IF violins log10 Chl-a | 0.65% px |
-| Fig. S12 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2010.png` | 2010: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 15.94% px |
-| Fig. S13 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2010.png` | 2010: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 15.41% px |
-| Fig. S14 | `yucatan/outputs/rerun_10m/figs/bayth/2011_IF_class.png` | 2011: IF class map | 0.05% px |
-| Fig. S15 | `yucatan/outputs/rerun_10m/figs/bayth/2011_IF_anom.png` | 2011: IF anomaly score map (cyan contour = class) | 0.12% px |
-| Fig. S16 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2011.png` | 2011: IF violins a_CDOM(412) | 0.64% px |
-| Fig. S17 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2011.png` | 2011: IF violins S275-295 | 0.80% px |
-| Fig. S18 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2011.png` | 2011: IF violins S300-600 | 0.74% px |
-| Fig. S19 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2011.png` | 2011: IF violins log10 Chl-a | 0.85% px |
-| Fig. S20 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2011.png` | 2011: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 17.20% px |
-| Fig. S21 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2011.png` | 2011: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 7.74% px |
-| Fig. S22 | `yucatan/outputs/rerun_10m/figs/bayth/2012_IF_class.png` | 2012: IF class map | 0.02% px |
-| Fig. S23 | `yucatan/outputs/rerun_10m/figs/bayth/2012_IF_anom.png` | 2012: IF anomaly score map (cyan contour = class) | 0.04% px |
-| Fig. S24 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2012.png` | 2012: IF violins a_CDOM(412) | 0.56% px |
-| Fig. S25 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2012.png` | 2012: IF violins S275-295 | 0.76% px |
-| Fig. S26 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2012.png` | 2012: IF violins S300-600 | 0.68% px |
-| Fig. S27 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2012.png` | 2012: IF violins log10 Chl-a | 0.71% px |
-| Fig. S28 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2012.png` | 2012: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 15.52% px |
-| Fig. S29 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2012.png` | 2012: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 3.82% px |
-| Fig. S30 | `yucatan/outputs/rerun_10m/figs/bayth/2013_IF_class.png` | 2013: IF class map | 0.05% px |
-| Fig. S31 | `yucatan/outputs/rerun_10m/figs/bayth/2013_IF_anom.png` | 2013: IF anomaly score map (cyan contour = class) | 0.10% px |
-| Fig. S32 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2013.png` | 2013: IF violins a_CDOM(412) | 0.64% px |
-| Fig. S33 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2013.png` | 2013: IF violins S275-295 | 1.02% px |
-| Fig. S34 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2013.png` | 2013: IF violins S300-600 | 0.85% px |
-| Fig. S35 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2013.png` | 2013: IF violins log10 Chl-a | 0.89% px |
-| Fig. S36 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2013.png` | 2013: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 15.63% px |
-| Fig. S37 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2013.png` | 2013: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 6.52% px |
-| Fig. S38 | `yucatan/outputs/rerun_10m/figs/bayth/2014_IF_class.png` | 2014: IF class map | 0.08% px |
-| Fig. S39 | `yucatan/outputs/rerun_10m/figs/bayth/2014_IF_anom.png` | 2014: IF anomaly score map (cyan contour = class) | 0.15% px |
-| Fig. S40 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2014.png` | 2014: IF violins a_CDOM(412) | 0.81% px |
-| Fig. S41 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2014.png` | 2014: IF violins S275-295 | 1.07% px |
-| Fig. S42 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2014.png` | 2014: IF violins S300-600 | 0.96% px |
-| Fig. S43 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2014.png` | 2014: IF violins log10 Chl-a | 0.96% px |
-| Fig. S44 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2014.png` | 2014: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 15.82% px |
-| Fig. S45 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2014.png` | 2014: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 7.72% px |
-| Fig. S46 | `yucatan/outputs/rerun_10m/figs/bayth/2015_IF_class.png` | 2015: IF class map | 0.10% px |
-| Fig. S47 | `yucatan/outputs/rerun_10m/figs/bayth/2015_IF_anom.png` | 2015: IF anomaly score map (cyan contour = class) | 0.20% px |
-| Fig. S48 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2015.png` | 2015: IF violins a_CDOM(412) | 0.98% px |
-| Fig. S49 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2015.png` | 2015: IF violins S275-295 | 1.14% px |
-| Fig. S50 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2015.png` | 2015: IF violins S300-600 | 0.97% px |
-| Fig. S51 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2015.png` | 2015: IF violins log10 Chl-a | 1.05% px |
-| Fig. S52 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2015.png` | 2015: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 7.97% px |
-| Fig. S53 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2015.png` | 2015: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 13.86% px |
-| Fig. S54 | `yucatan/outputs/rerun_10m/figs/bayth/2016_IF_class.png` | 2016: IF class map | 0.04% px |
-| Fig. S55 | `yucatan/outputs/rerun_10m/figs/bayth/2016_IF_anom.png` | 2016: IF anomaly score map (cyan contour = class) | 0.08% px |
-| Fig. S56 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2016.png` | 2016: IF violins a_CDOM(412) | 0.62% px |
-| Fig. S57 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2016.png` | 2016: IF violins S275-295 | 0.97% px |
-| Fig. S58 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2016.png` | 2016: IF violins S300-600 | 0.80% px |
-| Fig. S59 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2016.png` | 2016: IF violins log10 Chl-a | 0.81% px |
-| Fig. S60 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2016.png` | 2016: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 8.46% px |
-| Fig. S61 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2016.png` | 2016: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 17.73% px |
-| Fig. S62 | `yucatan/outputs/rerun_10m/figs/bayth/2017_IF_class.png` | 2017: IF class map | 0.05% px |
-| Fig. S63 | `yucatan/outputs/rerun_10m/figs/bayth/2017_IF_anom.png` | 2017: IF anomaly score map (cyan contour = class) | 0.11% px |
-| Fig. S64 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2017.png` | 2017: IF violins a_CDOM(412) | 0.43% px |
-| Fig. S65 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2017.png` | 2017: IF violins S275-295 | 0.86% px |
-| Fig. S66 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2017.png` | 2017: IF violins S300-600 | 0.79% px |
-| Fig. S67 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2017.png` | 2017: IF violins log10 Chl-a | 0.76% px |
-| Fig. S68 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2017.png` | 2017: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 15.17% px |
-| Fig. S69 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2017.png` | 2017: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 15.18% px |
-| Fig. S70 | `yucatan/outputs/rerun_10m/figs/bayth/2018_IF_class.png` | 2018: IF class map | 0.04% px |
-| Fig. S71 | `yucatan/outputs/rerun_10m/figs/bayth/2018_IF_anom.png` | 2018: IF anomaly score map (cyan contour = class) | 0.10% px |
-| Fig. S72 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2018.png` | 2018: IF violins a_CDOM(412) | 0.74% px |
-| Fig. S73 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2018.png` | 2018: IF violins S275-295 | 0.87% px |
-| Fig. S74 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2018.png` | 2018: IF violins S300-600 | 0.73% px |
-| Fig. S75 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2018.png` | 2018: IF violins log10 Chl-a | 0.84% px |
-| Fig. S76 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2018.png` | 2018: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 6.54% px |
-| Fig. S77 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2018.png` | 2018: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 5.98% px |
-| Fig. S78 | `yucatan/outputs/rerun_10m/figs/bayth/2019_IF_class.png` | 2019: IF class map | 0.09% px |
-| Fig. S79 | `yucatan/outputs/rerun_10m/figs/bayth/2019_IF_anom.png` | 2019: IF anomaly score map (cyan contour = class) | 0.17% px |
-| Fig. S80 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_a(412)_2019.png` | 2019: IF violins a_CDOM(412) | 0.66% px |
-| Fig. S81 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S275_295_2019.png` | 2019: IF violins S275-295 | 1.01% px |
-| Fig. S82 | `yucatan/outputs/rerun_10m/figs/violins/CDOM_S300_600_2019.png` | 2019: IF violins S300-600 | 0.89% px |
-| Fig. S83 | `yucatan/outputs/rerun_10m/figs/violins/Log10_Chlorophyll_2019.png` | 2019: IF violins log10 Chl-a | 0.82% px |
-| Fig. S84 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2019.png` | 2019: Chl vs a_CDOM(412): upwelling months (May-Sep) vs non-upwelling months (Oct-Apr), all deep pixels | 7.77% px |
-| Fig. S85 | `yucatan/outputs/rerun_10m/figs/scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2019.png` | 2019: Chl vs a_CDOM(412): May-Sep, inside vs outside IF class | 7.47% px |
+| Fig. 6 | `histograms/sst_weekly_climatology_sigma.png` | Weekly SST climatology histogram, -1 sigma bins | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 7 | `sigma/2018_sigma_class.png` | -1 sigma class maps, 2018 | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 10 | `bayth/climatology_IF_class.png` | IF class, 2010-2019 climatology | `visualization/yearly_class/IF_bayth_across_years.py` |
+| Fig. 12 | `sigma/violins_pooled_2010_2019.png` | -1 sigma violins pooled 2010-2019 | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 13 | `violins/CDOM_a(412)_2018_paper.png` | IF violins 2018 a_CDOM(412) | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 14 | `violins/CDOM_S275_295_2018_paper.png` | IF violins 2018 S275-295 | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 15 | `violins/CDOM_S300_600_2018_paper.png` | IF violins 2018 S300-600 | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 16 | `violins/Log10_Chlorophyll_2018_paper.png` | IF violins 2018 log10 Chl-a | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 17 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_may_2018.png` | Chl vs a_CDOM(412), May 2018, inside vs outside | `rerun_10m/figures_10m.py (paper style, extra)` |
+| Fig. 18 | `scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_upwelling_months.png` | Chl vs a_CDOM(412), May-Sep 2010-2019, inside vs outside IF class | `visualization/scatterplots/pooled.py` |
+| Fig. 19 | `scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_nonupwelling_months.png` | Chl vs a_CDOM(412), Oct-Apr 2010-2019, inside vs outside IF class | `visualization/scatterplots/pooled.py` |
+| Fig. 20 | `scatterplots/chlor_vs_cdom_upwelling_zones_pooled/chlor_vs_cdom_all_years_all_seasons.png` | Chl vs a_CDOM(412), all months 2010-2019, inside vs outside IF class | `visualization/scatterplots/pooled.py` |
+| Fig. S2 (2010 panel) | `sigma/CDOM_a(412)_2010.png` | 2010: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2011 panel) | `sigma/CDOM_a(412)_2011.png` | 2011: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2012 panel) | `sigma/CDOM_a(412)_2012.png` | 2012: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2013 panel) | `sigma/CDOM_a(412)_2013.png` | 2013: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2014 panel) | `sigma/CDOM_a(412)_2014.png` | 2014: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2015 panel) | `sigma/CDOM_a(412)_2015.png` | 2015: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2016 panel) | `sigma/CDOM_a(412)_2016.png` | 2016: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2017 panel) | `sigma/CDOM_a(412)_2017.png` | 2017: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2018 panel) | `sigma/CDOM_a(412)_2018.png` | 2018: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S2 (2019 panel) | `sigma/CDOM_a(412)_2019.png` | 2019: -1 sigma violins a_CDOM(412) | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2010 panel) | `sigma/CDOM_S275_295_2010.png` | 2010: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2011 panel) | `sigma/CDOM_S275_295_2011.png` | 2011: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2012 panel) | `sigma/CDOM_S275_295_2012.png` | 2012: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2013 panel) | `sigma/CDOM_S275_295_2013.png` | 2013: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2014 panel) | `sigma/CDOM_S275_295_2014.png` | 2014: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2015 panel) | `sigma/CDOM_S275_295_2015.png` | 2015: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2016 panel) | `sigma/CDOM_S275_295_2016.png` | 2016: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2017 panel) | `sigma/CDOM_S275_295_2017.png` | 2017: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2018 panel) | `sigma/CDOM_S275_295_2018.png` | 2018: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S3 (2019 panel) | `sigma/CDOM_S275_295_2019.png` | 2019: -1 sigma violins S275-295 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2010 panel) | `sigma/CDOM_S300_600_2010.png` | 2010: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2011 panel) | `sigma/CDOM_S300_600_2011.png` | 2011: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2012 panel) | `sigma/CDOM_S300_600_2012.png` | 2012: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2013 panel) | `sigma/CDOM_S300_600_2013.png` | 2013: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2014 panel) | `sigma/CDOM_S300_600_2014.png` | 2014: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2015 panel) | `sigma/CDOM_S300_600_2015.png` | 2015: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2016 panel) | `sigma/CDOM_S300_600_2016.png` | 2016: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2017 panel) | `sigma/CDOM_S300_600_2017.png` | 2017: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2018 panel) | `sigma/CDOM_S300_600_2018.png` | 2018: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S4 (2019 panel) | `sigma/CDOM_S300_600_2019.png` | 2019: -1 sigma violins S300-600 | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2010 panel) | `sigma/Log10_Chlorophyll_2010.png` | 2010: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2011 panel) | `sigma/Log10_Chlorophyll_2011.png` | 2011: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2012 panel) | `sigma/Log10_Chlorophyll_2012.png` | 2012: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2013 panel) | `sigma/Log10_Chlorophyll_2013.png` | 2013: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2014 panel) | `sigma/Log10_Chlorophyll_2014.png` | 2014: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2015 panel) | `sigma/Log10_Chlorophyll_2015.png` | 2015: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2016 panel) | `sigma/Log10_Chlorophyll_2016.png` | 2016: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2017 panel) | `sigma/Log10_Chlorophyll_2017.png` | 2017: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2018 panel) | `sigma/Log10_Chlorophyll_2018.png` | 2018: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S5 (2019 panel) | `sigma/Log10_Chlorophyll_2019.png` | 2019: -1 sigma violins log10 Chl-a | `YUC_ZONES=sigma visualization/violins/all_years.py` |
+| Fig. S6 | `bayth/2010_IF_class.png` | 2010: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S7 | `bayth/2010_IF_anom.png` | 2010: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S8 | `violins/CDOM_a(412)_2010.png` | 2010: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S9 | `violins/CDOM_S275_295_2010.png` | 2010: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S10 | `violins/CDOM_S300_600_2010.png` | 2010: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S11 | `violins/Log10_Chlorophyll_2010.png` | 2010: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S12 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2010.png` | 2010: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S13 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2010.png` | 2010: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S14 | `bayth/2011_IF_class.png` | 2011: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S15 | `bayth/2011_IF_anom.png` | 2011: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S16 | `violins/CDOM_a(412)_2011.png` | 2011: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S17 | `violins/CDOM_S275_295_2011.png` | 2011: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S18 | `violins/CDOM_S300_600_2011.png` | 2011: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S19 | `violins/Log10_Chlorophyll_2011.png` | 2011: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S20 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2011.png` | 2011: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S21 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2011.png` | 2011: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S22 | `bayth/2012_IF_class.png` | 2012: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S23 | `bayth/2012_IF_anom.png` | 2012: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S24 | `violins/CDOM_a(412)_2012.png` | 2012: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S25 | `violins/CDOM_S275_295_2012.png` | 2012: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S26 | `violins/CDOM_S300_600_2012.png` | 2012: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S27 | `violins/Log10_Chlorophyll_2012.png` | 2012: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S28 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2012.png` | 2012: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S29 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2012.png` | 2012: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S30 | `bayth/2013_IF_class.png` | 2013: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S31 | `bayth/2013_IF_anom.png` | 2013: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S32 | `violins/CDOM_a(412)_2013.png` | 2013: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S33 | `violins/CDOM_S275_295_2013.png` | 2013: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S34 | `violins/CDOM_S300_600_2013.png` | 2013: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S35 | `violins/Log10_Chlorophyll_2013.png` | 2013: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S36 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2013.png` | 2013: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S37 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2013.png` | 2013: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S38 | `bayth/2014_IF_class.png` | 2014: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S39 | `bayth/2014_IF_anom.png` | 2014: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S40 | `violins/CDOM_a(412)_2014.png` | 2014: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S41 | `violins/CDOM_S275_295_2014.png` | 2014: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S42 | `violins/CDOM_S300_600_2014.png` | 2014: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S43 | `violins/Log10_Chlorophyll_2014.png` | 2014: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S44 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2014.png` | 2014: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S45 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2014.png` | 2014: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S46 | `bayth/2015_IF_class.png` | 2015: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S47 | `bayth/2015_IF_anom.png` | 2015: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S48 | `violins/CDOM_a(412)_2015.png` | 2015: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S49 | `violins/CDOM_S275_295_2015.png` | 2015: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S50 | `violins/CDOM_S300_600_2015.png` | 2015: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S51 | `violins/Log10_Chlorophyll_2015.png` | 2015: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S52 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2015.png` | 2015: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S53 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2015.png` | 2015: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S54 | `bayth/2016_IF_class.png` | 2016: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S55 | `bayth/2016_IF_anom.png` | 2016: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S56 | `violins/CDOM_a(412)_2016.png` | 2016: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S57 | `violins/CDOM_S275_295_2016.png` | 2016: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S58 | `violins/CDOM_S300_600_2016.png` | 2016: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S59 | `violins/Log10_Chlorophyll_2016.png` | 2016: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S60 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2016.png` | 2016: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S61 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2016.png` | 2016: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S62 | `bayth/2017_IF_class.png` | 2017: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S63 | `bayth/2017_IF_anom.png` | 2017: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S64 | `violins/CDOM_a(412)_2017.png` | 2017: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S65 | `violins/CDOM_S275_295_2017.png` | 2017: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S66 | `violins/CDOM_S300_600_2017.png` | 2017: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S67 | `violins/Log10_Chlorophyll_2017.png` | 2017: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S68 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2017.png` | 2017: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S69 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2017.png` | 2017: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S70 / Fig. 8 | `bayth/2018_IF_class.png` | 2018: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S71 / Fig. 9 | `bayth/2018_IF_anom.png` | 2018: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S72 | `violins/CDOM_a(412)_2018.png` | 2018: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S73 | `violins/CDOM_S275_295_2018.png` | 2018: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S74 | `violins/CDOM_S300_600_2018.png` | 2018: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S75 | `violins/Log10_Chlorophyll_2018.png` | 2018: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S76 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2018.png` | 2018: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S77 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2018.png` | 2018: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| Fig. S78 | `bayth/2019_IF_class.png` | 2019: IF class map | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S79 | `bayth/2019_IF_anom.png` | 2019: IF anomaly score map (no legend / outline) | `visualization/yearly_class/IF_bayth_all_years.py` |
+| Fig. S80 | `violins/CDOM_a(412)_2019.png` | 2019: IF violins a_CDOM(412) | `visualization/violins/all_years.py` |
+| Fig. S81 | `violins/CDOM_S275_295_2019.png` | 2019: IF violins S275-295 | `visualization/violins/all_years.py` |
+| Fig. S82 | `violins/CDOM_S300_600_2019.png` | 2019: IF violins S300-600 | `visualization/violins/all_years.py` |
+| Fig. S83 | `violins/Log10_Chlorophyll_2019.png` | 2019: IF violins log10 Chl-a | `visualization/violins/all_years.py` |
+| Fig. S84 | `scatterplots/chlor_vs_cdom_upwelling_months_2010_2019/chlor_vs_cdom_2019.png` | 2019: Chl vs a_CDOM(412), May-Sep vs Oct-Apr, deep pixels | `visualization/scatterplots/monthly.py` |
+| Fig. S85 | `scatterplots/chlor_vs_cdom_upwelling_zones_yearly/chlor_vs_cdom_upwelling_months_2019.png` | 2019: Chl vs a_CDOM(412), May-Sep, inside vs outside IF class | `visualization/scatterplots/yearly.py` |
+| - | `histograms/cdom_412.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `histograms/cdom_slope_275_295.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `histograms/cdom_slope_300_600.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `histograms/chlorophyll.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `histograms/ssl.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `histograms/sst.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `histograms/sst_chlorophyll_cdom_412_cdom_slope_275_295_cdom_slope_300_600_ssl.png` | histograms/ figure, < 10 m pixels dropped | `visualization/histograms/ (YUC_DEPTH10=1)` |
+| - | `raw/cdom_412.png` | raw/ figure, < 10 m pixels dropped | `visualization/raw/ (YUC_DEPTH10=1)` |
+| - | `raw/cdom_slope_275_295.png` | raw/ figure, < 10 m pixels dropped | `visualization/raw/ (YUC_DEPTH10=1)` |
+| - | `raw/cdom_slope_300_600.png` | raw/ figure, < 10 m pixels dropped | `visualization/raw/ (YUC_DEPTH10=1)` |
+| - | `raw/log_chlor.png` | raw/ figure, < 10 m pixels dropped | `visualization/raw/ (YUC_DEPTH10=1)` |
+| - | `raw/ssl.png` | raw/ figure, < 10 m pixels dropped | `visualization/raw/ (YUC_DEPTH10=1)` |
+| - | `raw/sst.png` | raw/ figure, < 10 m pixels dropped | `visualization/raw/ (YUC_DEPTH10=1)` |
 
 Not regenerated (no inside/outside split): Fig 1, Figs 2-4, Fig 5, Fig 11, Fig S1.
