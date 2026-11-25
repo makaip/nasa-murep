@@ -1,3 +1,4 @@
+import os
 import sys
 import warnings
 from pathlib import Path
@@ -14,7 +15,9 @@ from plot_style import nice_limits
 plt.style.use('default')
 
 DATA_PATH = Path(r"E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl")
-OUT_DIR = Path(__file__).resolve().parents[3] / "figs" / "raw"
+# YUC_FIGS_ROOT redirects output (default yucatan/figs); YUC_DEPTH10=1 blanks < 10 m pixels (depth10-everywhere)
+OUT_DIR = Path(os.environ.get("YUC_FIGS_ROOT", Path(__file__).resolve().parents[3] / "figs")) / "raw"
+DEPTH10 = os.environ.get("YUC_DEPTH10") == "1"
 
 TARGET_YEAR = 2018
 MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -71,6 +74,13 @@ def load_data(path):
 
     lon_centers = np.array(metadata['lon_centers'])
     lat_centers = np.array(metadata['lat_centers'])
+    if DEPTH10:
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+        from depth_cutoff import deep_mask
+        deep = deep_mask(metadata["bathymetry"])
+        for var in RAW_VARS:
+            if var in df.columns:
+                df[var] = df[var].apply(lambda v: v if _is_missing_day(v) else np.where(deep, np.asarray(v, dtype=float), np.nan))
     if lon_centers.ndim == 1 and lat_centers.ndim == 1:
         lon_grid, lat_grid = np.meshgrid(lon_centers, lat_centers)
     else:

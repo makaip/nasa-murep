@@ -151,12 +151,13 @@ def depth_table(L):
 
 def figure_list(L, changed):
     src = (Y / "outputs/rerun_10m/FIGURES.md").read_text(encoding="utf-8")
+    tree = json.load(open(Path(__file__).with_name("flat_to_tree.json"))) if Path(__file__).with_name("flat_to_tree.json").exists() else {}
     rows = []
     for line in src.splitlines():
         m = re.match(r"\| (Fig\. S?\d+) \| (\S+\.png) \| ([^|]+) \|", line)
         if m:
             fig, f, what = m.groups()
-            rows.append([fig, f"`yucatan/outputs/redo/figs_depth10/{f}`", what.strip(), changed.get(f, "?")])
+            rows.append([fig, f"`yucatan/outputs/rerun_10m/figs/{tree[f]}`" if f in tree else f"`yucatan/outputs/redo/figs_depth10/{f}`", what.strip(), changed.get(f, "?")])
     table(L, ["Paper figure", "File", "What", "Changed vs 11-13 rerun figure"], rows)
 
 
@@ -230,10 +231,10 @@ def main(changed=None):
     depth_table(L)
 
     L += ["## 8. Regenerated figures", "",
-          "All redrawn on this branch from the NEW zones into `yucatan/outputs/redo/figs_depth10/` "
+          "All redrawn on this branch from the NEW zones into `yucatan/outputs/redo/figs_depth10/` (flat paper names), then copied into `yucatan/outputs/rerun_10m/figs/` in the original `yucatan/figs/` layout and names (`experiments/rerun_10m/to_original_layout.py`; map in `figs/MAP.json`; raw/ and histograms/ redrawn with `YUC_DEPTH10=1`). The paths below are the new ones. "
           "(generator `yucatan/experiments/rerun_10m/figures_10m.py all`, 300 dpi). In every violin and scatter the outside "
           "group is (zone == 0) & depth >= 10 m; maps draw < 10 m water light gray and do not classify it. "
-          "Last column: share of pixels that differ from the 11-13 rerun PNG (`outputs/rerun_10m/figs/`). For the scatters "
+          "Last column: share of pixels that differ from the 11-13 rerun PNG (flat `outputs/rerun_10m/figs/*.png` at commit b3fdb4b, now replaced). For the scatters "
           "(Figs 17-20, S12/S13-type panels), most of the difference comes from the random 50,000-point subsample being redrawn. "
           "S12-type panels do not depend on the class at all and still differ by ~8-17%. The maps and violins change only slightly "
           "(<= 1.1% of pixels), and -1 sigma figures are pixel-identical.", ""]

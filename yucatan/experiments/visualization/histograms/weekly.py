@@ -1,3 +1,4 @@
+import os
 import pickle
 import sys
 from pathlib import Path
@@ -15,7 +16,9 @@ from matplotlib.ticker import FixedLocator, MaxNLocator
 
 plt.style.use('default')
 target_year = 2018
-FIGS_DIR = Path(__file__).resolve().parents[3] / 'figs' / 'histograms'
+# YUC_FIGS_ROOT redirects output (default yucatan/figs); YUC_DEPTH10=1 drops < 10 m pixels (depth10-everywhere)
+FIGS_DIR = Path(os.environ.get('YUC_FIGS_ROOT', Path(__file__).resolve().parents[3] / 'figs')) / 'histograms'
+DEPTH10 = os.environ.get('YUC_DEPTH10') == '1'
 
 try:
     with open(r'E:\satdata\Custom\yucatan_sst_chlor_cdomslope_ssl_bathy_2010-2019_v4.pkl', 'rb') as f:
@@ -34,6 +37,12 @@ except FileNotFoundError:
 # r'$\log_{10}(\text{mg/m}^3)$'
 
 df_all_years = df.copy()
+
+DEEP = None
+if DEPTH10:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from depth_cutoff import deep_mask
+    DEEP = deep_mask(metadata['bathymetry'])
 
 products = [
     'sst', 
@@ -66,6 +75,8 @@ for week_num, week_df in tqdm(df_all_years.groupby('week'), desc="Processing wee
             grid = row.get(p)
             if grid is not None and not (isinstance(grid, float) and np.isnan(grid)):
                 grid_arr = np.array(grid, dtype=float)
+                if DEEP is not None:
+                    grid_arr = np.where(DEEP, grid_arr, np.nan)
                 if not np.isnan(grid_arr).all():
                     grids.append(grid_arr)
         

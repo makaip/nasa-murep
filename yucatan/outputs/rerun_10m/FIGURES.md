@@ -1,5 +1,7 @@
 # Paper figures, 10 m depth cutoff in all cases (rerun 2026-11-13)
 
+> **2026-11-24 (branch depth10-everywhere):** `figs/` no longer holds the flat files listed below. It now holds the depth10-everywhere figures (10 m cut on both groups and on the IF gates) in the original `yucatan/figs/` layout (bayth/, violins/, scatterplots/..., raw/, histograms/, plus sigma/ and *_IF_anom.png extras). Map from each tree path to its paper figure: `figs/MAP.json`; paper-figure -> path table: `outputs/redo/paper_stats_depth10.md` section 8. The flat 11-13 files below are in git at commit b3fdb4b.
+
 All files: `figs/`, PNG at 300 dpi. Generator: `yucatan/experiments/rerun_10m/figures_10m.py` (one script; run with the repo .venv, `figures_10m.py all`, ~40 min). Numbering follows the 11-10 draft's figure list.
 
 Convention: pixels shallower than 10 m (GEBCO, `yucatan/experiments/depth_cutoff.py`) are in neither the inside nor the outside group. Maps draw them light gray ("Shallow (< 10 m)") and land darker gray. Violins keep the legend wording "No data" (star = month with no class). Data: redo .npy caches of the v4 pickle; IF zones = `outputs/redo/cache/zones/iforest.npz` (identical to `figs/bayth_preclassified.pkl`); -1 sigma zones = `zones/sigma.npz` (redo/sigma.py, monthly rule over deep pixels).
